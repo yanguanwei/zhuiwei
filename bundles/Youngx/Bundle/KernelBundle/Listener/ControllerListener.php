@@ -35,7 +35,7 @@ class ControllerListener implements Registration
      */
     private $logger;
 
-    public function __construct($defaultControllerMethod = 'index', $defaultControllerClass = 'Index', LoggerInterface $logger)
+    public function __construct(LoggerInterface $logger, $defaultControllerMethod = 'index', $defaultControllerClass = 'Index')
     {
         $this->defaultControllerMethod = $defaultControllerMethod;
         $this->defaultControllerClass = $defaultControllerClass;
@@ -78,7 +78,7 @@ class ControllerListener implements Registration
             return $controller;
         }
 
-        if (false === strpos($controller, '.')) {
+        if (false === strpos($controller, '.') && false === strpos($controller, '@')) {
             if (method_exists($controller, '__invoke')) {
                 return new $controller;
             } elseif (function_exists($controller)) {
