@@ -2,4 +2,5 @@
 /app/cache/*
 /web/public/*
 /web/index.php
+/vendor
 .idea
