@@ -28,6 +28,10 @@ class App extends \Youngx\MVC\Application
 
     protected function registerConfiguration()
     {
-        return include __DIR__ . '/config/main.php';
+        $file = __DIR__ . "/config/main_{$this->getEnvironment()}.php";
+        if (is_file($file)) {
+            return include $file;
+        }
+        return array();
     }
 }
