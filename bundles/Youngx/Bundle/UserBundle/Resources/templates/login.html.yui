@@ -1,0 +1,38 @@
+<?php
+foreach ($this->flash_messages() as $type => $messages) {
+    foreach ($messages as $message) {
+        echo sprintf('<div class="alert alert-%s">%s</div>', $type, $message);
+    }
+}
+
+$form = $this->widget('Form', array(
+        '#form' => $this->form,
+        '#skin' => 'horizontal',
+        'cancel' => false
+    ))->start();
+
+echo '<fieldset>';
+
+echo $form->field('username')->text(array(
+        '#prepend' => $this->html('i', array('class' => 'icon-user')),
+        '#size' => 'large',
+        '#span' => 10
+    ));
+
+echo $form->field('password')->password(array(
+        '#prepend' => $this->html('i', array('class' => 'icon-lock')),
+        '#size' => 'large',
+        '#span' => 10
+    ));
+
+echo $form->field('rememberMe')->checkbox(array(
+        'value' => 1,
+        //'class' => 'remember',
+        '#label' => 'Remember me'
+    ));
+
+echo $form->submit('登录');
+
+echo '</fieldset>';
+
+echo $form->end();

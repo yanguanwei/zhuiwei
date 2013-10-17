@@ -1,4 +1,4 @@
-zhuiwei
-=======
+youngx-standard
+===============
 
-a b2b website
+The "Youngx Standard Edition" distribution.

@@ -1,0 +1,155 @@
+<?php
+
+namespace Youngx\Bundle\UserBundle\Listener;
+
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Youngx\Bundle\UserBundle\Entity\UserEntity;
+use Youngx\Bundle\UserBundle\Input\SelectUserInput;
+use Youngx\EventHandler\Event\GetValueEvent;
+use Youngx\MVC\Context;
+use Youngx\MVC\Event\GetResponseEvent;
+use Youngx\MVC\Event\GetResponseForRoutingEvent;
+use Youngx\EventHandler\Registration;
+use Youngx\MVC\Exception\HttpException;
+
+class MainListener implements Registration
+{
+    /**
+     * @var Context
+     */
+    protected $context;
+
+    public function setContext(Context $context)
+    {
+        $this->context = $context;
+    }
+
+    public function accessForUserLogin()
+    {
+        if ($this->context->identity()->isLogged()) {
+            return false;
+        }
+        return true;
+    }
+
+    public function redirectUserLoginResponse(GetResponseEvent $event)
+    {
+        $event->setResponse($this->context->redirectResponse($this->context->generateUrl('user-home')));
+    }
+
+    public function accessForUserLogout()
+    {
+        if (!$this->context->identity()->isLogged()) {
+            return false;
+        }
+        return true;
+    }
+
+    public function redirectUserLogoutResponse(GetResponseEvent $event)
+    {
+        $event->setResponse($this->context->redirectResponse($this->context->generateUrl('user-login')));
+    }
+
+    public function accessForUserRegister()
+    {
+        if ($this->context->identity()->isLogged()) {
+            return false;
+        }
+        return true;
+    }
+
+    public function redirectUserRegisterResponse(GetResponseEvent $event)
+    {
+        $event->setResponse($this->context->redirectResponse($this->context->generateUrl('user-home')));
+    }
+
+    public function redirectRegisteredResponse(GetResponseEvent $event)
+    {
+        if (!$this->context->identity()->isLogged()) {
+            $event->setResponse($this->context->redirectResponse($this->context->generateUrl('user-login')));
+        }
+    }
+
+    public function selectUserInput(array $attributes)
+    {
+        $text = new SelectUserInput($this->context, array_merge(array(
+            'placeholder' => '请输入用户名'
+        ), $attributes));
+
+        $hidden = $text->getHiddenHtml();
+
+        $this->context->assets()->registerPackage('bootstrap.autocomplete');
+        $url = $this->context->generateUrl('user-ajax-autocomplete');
+
+        $code = <<<code
+$('#{$text->getId()}').autocomplete({
+		source:function(query,process){
+			var matchCount = this.options.items;
+			$.getJSON("{$url}",{"keyword":query,"count":matchCount},function(respData){
+				return process(respData);
+			});
+		},
+		formatItem:function(item){
+			return item["name"] + " (" + item["id"] + ")";
+		},
+		setValue:function(item, i){
+		    if (i == 0) {
+		        $('#{$hidden->getId()}').val(item["id"]);
+		     }
+			return {'data-value':item["name"] + " (" + item["id"] + ")",'real-value':item["id"]};
+		},
+		updater: function(item, realVal) {
+		    $('#{$hidden->getId()}').val(realVal);
+		    return item;
+		}
+	});
+$('#{$text->getId()}').change(function() {
+    if ($(this).val() == '') {
+        $('#{$hidden->getId()}').val(0);
+    }
+});
+code;
+        $this->context->assets()->registerScriptCode($text->getId(), $code);
+
+        return $text;
+    }
+
+    public function getRoleLabels()
+    {
+        $roles = array();
+        foreach ($this->context->db()->query("SELECT id, label FROM y_role ORDER BY id ASC") as $role) {
+            $roles[$role['id']] = $role['label'];
+        }
+        return $roles;
+    }
+
+    public function checkAccess()
+    {
+        if ($this->context->identity()->getId() == 1) {
+            return true;
+        }
+    }
+
+    public function deleteUserEntity(UserEntity $user)
+    {
+        $user->getProfile()->delete();
+        $this->context->db()->exec('DELETE FROM y_user_roles WHERE uid=:uid', array(':uid' => $user->getUid()));
+    }
+
+    public static function registerListeners()
+    {
+        return array(
+            'kernel.access#user-login' => 'accessForUserLogin',
+            'kernel.access#user-logout' => 'accessForUserLogout',
+            'kernel.access#user-register' => 'accessForUserRegister',
+            'kernel.access.deny#user-login' => 'redirectUserLoginResponse',
+            'kernel.access.deny#user-logout' => 'redirectUserLogoutResponse',
+            'kernel.access.deny#user-register' => 'redirectUserRegisterResponse',
+            'kernel.access.deny#registered' => 'redirectRegisteredResponse',
+            'kernel.input#select-user' => 'selectUserInput',
+            'kernel.value#role-labels' => 'getRoleLabels',
+            'kernel.entity.delete#user' => 'deleteUserEntity',
+            'kernel.access' => 'checkAccess'
+        );
+    }
+}
