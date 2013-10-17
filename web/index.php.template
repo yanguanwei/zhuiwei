@@ -1,0 +1,11 @@
+<?php
+
+use Youngx\MVC\Request;
+
+require '../vendor/autoload.php';
+require '../app/App.php';
+
+$app = new App('dev', true);
+
+$response = $app->dispatch(Request::createFromGlobals());
+$response->send();
