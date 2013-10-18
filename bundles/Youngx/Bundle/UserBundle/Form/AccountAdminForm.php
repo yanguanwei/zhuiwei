@@ -22,7 +22,6 @@ class AccountAdminForm extends Form
     protected $email;
     protected $status;
     protected $roles = array();
-    protected $company_id = 0;
 
     protected function registerValidators()
     {
@@ -134,7 +133,7 @@ class AccountAdminForm extends Form
     protected function fields()
     {
         $fields = array(
-            'name', 'email', 'status', 'roles', 'company_id'
+            'name', 'email', 'status', 'roles'
         );
 
         if (!$this->user) {
@@ -262,21 +261,5 @@ class AccountAdminForm extends Form
     public function getRoles()
     {
         return $this->roles;
-    }
-
-    /**
-     * @param int $company_id
-     */
-    public function setCompanyId($company_id)
-    {
-        $this->company_id = $company_id;
-    }
-
-    /**
-     * @return int
-     */
-    public function getCompanyId()
-    {
-        return $this->company_id;
     }
 }

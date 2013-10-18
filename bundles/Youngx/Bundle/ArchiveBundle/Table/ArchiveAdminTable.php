@@ -24,7 +24,7 @@ abstract class ArchiveAdminTable extends Table
                 )));
     }
 
-    protected function formatIdColumnHeading($column, Html $th)
+    protected function formatIdColumnHeading(Html $th)
     {
         $th->style('width', '5%')->addClass('center');
     }
@@ -55,7 +55,7 @@ abstract class ArchiveAdminTable extends Table
         }
     }
 
-    protected function formatOperationsColumnHeading($column, Html $th)
+    protected function formatOperationsColumnHeading(Html $th)
     {
         $th->style('width', '20%');
     }
