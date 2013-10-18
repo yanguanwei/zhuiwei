@@ -3,6 +3,7 @@
 namespace Youngx\Bundle\CategoryBundle\Entity;
 
 use Youngx\Database\Entity;
+use Youngx\Database\Query;
 
 class CategoryEntity extends Entity
 {
@@ -117,15 +118,16 @@ class CategoryEntity extends Entity
     }
 
     /**
+     * @param int $uid
      * @return CategoryEntity[]
      */
-    public function getChildren()
+    public function getChildren($uid = 0)
     {
         return $this->repository()
             ->query('category')
-            ->where('parent_id=:parent_id')
+            ->where('uid=:uid AND parent_id=:parent_id')
             ->order('sort_num ASC')
-            ->all(array(':parent_id' => $this->id));
+            ->all(array(':uid' => $uid, ':parent_id' => $this->id));
     }
 
     /**
@@ -156,5 +158,21 @@ class CategoryEntity extends Entity
     public function getUid()
     {
         return $this->uid;
+    }
+
+    public static function standard(Query $query)
+    {
+        return $query->where("{$query->getAlias()}.uid='0'");
+    }
+
+    public static function ancestral(Query $query)
+    {
+        return $query->where("{$query->getAlias()}.parent_id='0'");
+    }
+
+    public static function orderly(Query $query)
+    {
+        $alias = $query->getAlias();
+        return $query->order("{$alias}.sort_num ASC, {$alias}.id ASC");
     }
 }

@@ -34,7 +34,7 @@ class ProductPriceEntity extends Entity
 
     public static function type()
     {
-        return 'product_price';
+        return 'product-price';
     }
 
     public static function table()

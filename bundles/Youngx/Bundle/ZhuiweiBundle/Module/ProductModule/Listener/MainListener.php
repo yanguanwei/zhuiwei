@@ -58,8 +58,6 @@ class MainListener implements Registration
 
     }
 
-
-
     public static function registerListeners()
     {
         return array(

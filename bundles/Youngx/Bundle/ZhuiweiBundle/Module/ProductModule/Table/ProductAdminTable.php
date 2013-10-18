@@ -27,7 +27,6 @@ class ProductAdminTable extends Table
      */
     protected function query()
     {
-
         $select = $this->context->db()->select(array('zw_index_product', 'zwip'), 'product_id');
 
         if ($this->uid) {

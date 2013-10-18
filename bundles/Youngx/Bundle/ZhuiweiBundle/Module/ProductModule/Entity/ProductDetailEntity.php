@@ -20,7 +20,7 @@ class ProductDetailEntity extends Entity
 
     public static function type()
     {
-        return 'product_detail';
+        return 'product-detail';
     }
 
     public static function table()

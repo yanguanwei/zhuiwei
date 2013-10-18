@@ -4,6 +4,7 @@ namespace Youngx\Bundle\ZhuiweiBundle\Module\ProductModule\Listener;
 
 use Youngx\Bundle\AdminBundle\Module\DistrictModule\Entity\DistrictEntity;
 use Youngx\Bundle\ZhuiweiBundle\Module\ProductModule\Entity\ProductEntity;
+use Youngx\Bundle\ZhuiweiBundle\Module\ProductModule\Entity\ProductPriceEntity;
 use Youngx\Bundle\ZhuiweiBundle\Module\SellerModule\Entity\FactoryEntity;
 use Youngx\Bundle\ZhuiweiBundle\Module\SellerModule\Entity\SellerEntity;
 use Youngx\EventHandler\Registration;
@@ -32,6 +33,28 @@ class ProductIndexListener implements Registration
         $db->delete('zw_index_product_district', "product_id='{$productId}'");
         $db->delete('zw_index_product_user', "product_id='{$productId}'");
         $db->delete('zw_index_product_title', "product_id='{$productId}'");
+    }
+
+    public function deleteProductPrice(ProductPriceEntity $entity)
+    {
+        if ($entity->getType() == ProductPriceEntity::TYPE_STOCK) {
+            $productId = $entity->getProductId();
+            $db = $this->context->db();
+            $db->delete('zw_index_product_price_stock', "product_id='{$productId}'");
+        }
+    }
+
+    public function updateProductPriceIndex(ProductPriceEntity $entity)
+    {
+        if ($entity->getType() == ProductPriceEntity::TYPE_STOCK) {
+            $productId = $entity->getProductId();
+            $db = $this->context->db();
+            $db->delete('zw_index_product_price_stock', "product_id='{$productId}'");
+            $db->insert('zw_index_product_price_stock', array(
+                    'product_id' => $productId,
+                    'price' => $entity->getPrice()
+                ));
+        }
     }
 
     protected function updateProductCategoryIndex(ProductEntity $entity)
@@ -149,6 +172,8 @@ class ProductIndexListener implements Registration
             'kernel.entity.delete#product' => 'deleteProductEntity',
             'kernel.entity.beforeInsert#product' => 'insertProductIndex',
             'kernel.entity.beforeUpdate#product' => 'updateProductIndex',
+            'kernel.entity.save#product-price' => 'updateProductPriceIndex',
+            'kernel.entity.delete#product-price' => 'deleteProductPrice',
         );
     }
 }

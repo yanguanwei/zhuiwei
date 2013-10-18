@@ -23,6 +23,8 @@ class ProductPictureAdminForm extends FileForm
     protected function initRequest()
     {
         $this->setEntity($this->product);
+
+        parent::initRequest();
     }
 
     protected function render(RenderableResponse $response)

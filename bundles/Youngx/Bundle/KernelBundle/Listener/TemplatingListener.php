@@ -42,6 +42,31 @@ class TemplatingListener implements Registration
         return $this->context->assets();
     }
 
+    public function asset_script($key, $path, $sort = 0)
+    {
+        return $this->context->assets()->registerScriptUrl($key, $this->asset_url($path), $sort);
+    }
+
+    public function asset_style($key, $path, $sort = 0)
+    {
+        return $this->context->assets()->registerStyleUrl($key, $this->asset_url($path), $sort);
+    }
+
+    public function asset_style_code($key, $code, $sort = 0)
+    {
+        return $this->context->assets()->registerStyleCode($key, $code, $sort);
+    }
+
+    public function asset_script_code($key, $code, $sort = 0)
+    {
+        return $this->context->assets()->registerScriptCode($key, $code, $sort);
+    }
+
+    public function asset_package($package, $version = null)
+    {
+        return $this->context->assets()->registerPackage($package, $version);
+    }
+
     public function asset_url($path)
     {
         if ($path[0] == '/') {
@@ -57,6 +82,27 @@ class TemplatingListener implements Registration
     public function block($name, $content = null)
     {
         return $this->engine->block($name, $content);
+    }
+
+    public function cache()
+    {
+        $cache = $this->context->cache();
+        $args = func_get_args();
+        if (!$args) {
+            return $cache;
+        }
+
+        switch (count($args)) {
+            case 1:
+                return $cache->fetch($args[0]);
+            case 2:
+                $cache->save($args[0], $args[1]);
+                return $cache;
+            case 3:
+                $cache->save($args[0], $args[1], $args[2]);
+                return $cache;
+        }
+
     }
 
     public function html($html, array $attributes = array())
@@ -128,11 +174,22 @@ class TemplatingListener implements Registration
         return $this->context->identity();
     }
 
+    public function repository()
+    {
+        return $this->context->repository();
+    }
+
     public static function registerListeners()
     {
         return array(
-            'kernel.templating.call.assets' => 'assets',
+            'kernel.templating.call.asset_style' => 'asset_style',
+            'kernel.templating.call.asset_style_code' => 'asset_style_code',
+            'kernel.templating.call.asset_script_code' => 'asset_script_code',
+            'kernel.templating.call.asset_script' => 'asset_script',
             'kernel.templating.call.asset_url' => 'asset_url',
+            'kernel.templating.call.asset_package' => 'asset_package',
+            'kernel.templating.call.assets' => 'assets',
+            'kernel.templating.call.cache' => 'cache',
             'kernel.templating.call.block' => 'block',
             'kernel.templating.call.form' => 'form',
             'kernel.templating.call.html' => 'html',
@@ -146,8 +203,9 @@ class TemplatingListener implements Registration
             'kernel.templating.call.server' => 'server',
             'kernel.templating.call.url' => 'url',
             'kernel.templating.call.flash_messages' => 'flash_messages',
+            'kernel.templating.call.identity' => 'identity',
+            'kernel.templating.call.repository' => 'repository',
             'kernel.renderable.layout' => 'layout',
-            'kernel.templating.call.identity' => 'identity'
         );
     }
 }

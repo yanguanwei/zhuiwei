@@ -12,6 +12,10 @@ class CollectListener implements Registration
         $zhuiwei = $collection->getCollection('zhuiwei');
         $zhuiwei->add('home', '/', '首页', 'Home@Zhuiwei')
             ->setAccess(true);
+
+        $zhuiwei->add('products', '/products', '所有产品', 'Products@Zhuiwei')
+            ->setAccess(true);
+
     }
 
     public static function registerListeners()

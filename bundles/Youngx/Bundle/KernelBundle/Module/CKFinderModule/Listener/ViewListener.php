@@ -6,6 +6,7 @@ use Youngx\EventHandler\Registration;
 use Youngx\MVC\Assets;
 use Youngx\MVC\Context;
 use Youngx\MVC\Html;
+use Youngx\MVC\User\Identity;
 
 class ViewListener implements Registration
 {
@@ -41,7 +42,7 @@ class ViewListener implements Registration
         $text->set('#addon', array(
                 'append' => $button = $this->context->html('button', array(
                         'class' => 'btn btn-sm btn-default',
-                        '#content' => '<i class="icon-calendar bigger-110"></i>'
+                        '#content' => '<i class="icon-picture bigger-110"></i>'
                     )),
                 'append-type' => 'btn'
             ));
@@ -51,8 +52,9 @@ class ViewListener implements Registration
 $('#{$button->getId()}').click(function() {
     var finder = new CKFinder();
 	finder.basePath = '{$basePath}';
+    finder.startupPath = 'Images:/';
 	finder.selectActionFunction = function(fileUrl) {
-        $('#{$text->getId()}').val(fileUrl)
+        $('#{$text->getId()}').val(fileUrl);
 	};
 	finder.popup();
 
@@ -63,12 +65,28 @@ code;
         return $text;
     }
 
+    public function onUserLogin(Identity $identity)
+    {
+        if ($identity->getId() == 1 || $identity->hasRole(Identity::ROLE_ADMINISTRATOR)) {
+            $this->context->session()->set('CKFinder_identity', 1);
+        }
+    }
+
+    public function onUserLogout(Identity $identity)
+    {
+        if ($identity->getId() == 1 || $identity->hasRole(Identity::ROLE_ADMINISTRATOR)) {
+            $this->context->session()->remove('CKFinder_identity');
+        }
+    }
+
     public static function registerListeners()
     {
         return array(
             'kernel.assets.package#ckfinder' => 'ckfinderPackage',
             'kernel.input.format#ckeditor' => 'formatCKEditorInput',
-            'kernel.input#ckfinder' => 'ckfinderInput'
+            'kernel.input#ckfinder' => 'ckfinderInput',
+            'user.login' => 'onUserLogin',
+            'user.logout' => 'onUserLogout',
         );
     }
 }

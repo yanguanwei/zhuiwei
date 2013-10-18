@@ -5,6 +5,7 @@ namespace Youngx\Bundle\ZhuiweiBundle\Module\ProductModule\Entity;
 use Youngx\Bundle\AdminBundle\Module\VocabularyModule\Entity\TermEntity;
 use Youngx\Bundle\CategoryBundle\Entity\CategoryEntity;
 use Youngx\Bundle\UserBundle\Entity\UserEntity;
+use Youngx\Bundle\ZhuiweiBundle\Module\SellerModule\Entity\FactoryEntity;
 use Youngx\Database\Entity;
 
 class ProductEntity extends Entity
@@ -23,6 +24,7 @@ class ProductEntity extends Entity
     protected $shipping_time;
     protected $prices;
     protected $priceIds;
+    protected $factory_id;
 
     public function __sleep()
     {
@@ -42,7 +44,7 @@ class ProductEntity extends Entity
      */
     public function getDetail()
     {
-        return $this->repository()->load('product_detail', $this->id);
+        return $this->repository()->load('product-detail', $this->id);
     }
 
     /**
@@ -53,12 +55,12 @@ class ProductEntity extends Entity
         if (null === $this->prices) {
             if (is_array($this->priceIds)) {
                 if ($this->priceIds) {
-                    $entities = $this->repository()->loadMultiple('product_price', $this->priceIds);
+                    $entities = $this->repository()->loadMultiple('product-price', $this->priceIds);
                 } else {
                     $entities = array();
                 }
             } else {
-                $entities = $this->repository()->query('product_price')->where('product_id=:product_id')->all(array(':product_id'=>$this->id));
+                $entities = $this->repository()->query('product-price')->where('product_id=:product_id')->all(array(':product_id'=>$this->id));
             }
 
             $prices = array();
@@ -77,7 +79,7 @@ class ProductEntity extends Entity
     public function getTradePrice()
     {
         if ($this->priceIds && isset($this->priceIds[ProductPriceEntity::TYPE_TRADE])) {
-            return $this->repository()->load('product_price', $this->priceIds[ProductPriceEntity::TYPE_TRADE]);
+            return $this->repository()->load('product-price', $this->priceIds[ProductPriceEntity::TYPE_TRADE]);
         } else {
             $prices = $this->getPrices();
             return isset($prices[ProductPriceEntity::TYPE_TRADE]) ? $prices[ProductPriceEntity::TYPE_TRADE] : null;
@@ -90,7 +92,7 @@ class ProductEntity extends Entity
     public function getTaobaoPrice()
     {
         if ($this->priceIds && isset($this->priceIds[ProductPriceEntity::TYPE_TAOBAO])) {
-            return $this->repository()->load('product_price', $this->priceIds[ProductPriceEntity::TYPE_TAOBAO]);
+            return $this->repository()->load('product-price', $this->priceIds[ProductPriceEntity::TYPE_TAOBAO]);
         } else {
             $prices = $this->getPrices();
             return isset($prices[ProductPriceEntity::TYPE_TAOBAO]) ? $prices[ProductPriceEntity::TYPE_TAOBAO] : null;
@@ -103,7 +105,7 @@ class ProductEntity extends Entity
     public function getStockPrice()
     {
         if ($this->priceIds && isset($this->priceIds[ProductPriceEntity::TYPE_STOCK])) {
-            return $this->repository()->load('product_price', $this->priceIds[ProductPriceEntity::TYPE_STOCK]);
+            return $this->repository()->load('product-price', $this->priceIds[ProductPriceEntity::TYPE_STOCK]);
         } else {
             $prices = $this->getPrices();
             return isset($prices[ProductPriceEntity::TYPE_STOCK]) ? $prices[ProductPriceEntity::TYPE_STOCK] : null;
@@ -116,7 +118,7 @@ class ProductEntity extends Entity
     public function getCustomerPrice()
     {
         if ($this->priceIds && isset($this->priceIds[ProductPriceEntity::TYPE_CUSTOMER])) {
-            return $this->repository()->load('product_price', $this->priceIds[ProductPriceEntity::TYPE_CUSTOMER]);
+            return $this->repository()->load('product-price', $this->priceIds[ProductPriceEntity::TYPE_CUSTOMER]);
         } else {
             $prices = $this->getPrices();
             return isset($prices[ProductPriceEntity::TYPE_CUSTOMER]) ? $prices[ProductPriceEntity::TYPE_CUSTOMER] : null;
@@ -129,6 +131,43 @@ class ProductEntity extends Entity
     public function getUser()
     {
         return $this->uid ? $this->repository()->load('user', $this->uid) : null;
+    }
+
+    /**
+     * @return FactoryEntity | null
+     */
+    public function getFactory()
+    {
+        $factory_id = $this->getFactoryId();
+        if ($factory_id) {
+            return $this->repository()->load('factory', $this->factory_id);
+        }
+    }
+
+    public function getFactoryId()
+    {
+        if (null === $this->factory_id) {
+            if ($this->uid) {
+                $seller = $this->factory_id = $this->repository()->load('seller', $this->uid);
+                if ($seller) {
+                    $this->factory_id = $seller->get('factory_id');
+                }
+            }
+
+            if (!$this->factory_id) {
+                $this->factory_id = 0;
+            }
+        }
+
+        return $this->factory_id;
+    }
+
+    public function getFactoryName()
+    {
+        $factory = $this->getFactory();
+        if ($factory) {
+            return $factory->getName();
+        }
     }
 
     public static function type()

@@ -83,7 +83,8 @@ class MainListener implements Registration
         return array(
             'kernel.value#files' => 'getFiles',
             'kernel.value#image-url' => 'getImageUrl',
-            'kernel.entity.delete#file' => 'deleteFileEntity'
+            'kernel.entity.delete#file' => 'deleteFileEntity',
+            'kernel.templating.call.image_url' => 'getImageUrl'
         );
     }
 }
