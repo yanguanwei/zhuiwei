@@ -49,7 +49,7 @@ class ValidateListener implements Registration
 
     public function name($value)
     {
-        return preg_match('/^[a-z][a-z0-9_]+$/', $value);
+        return preg_match('/^[a-z][a-z0-9_]{3, 32}$/', $value);
     }
 
     public static function registerListeners()

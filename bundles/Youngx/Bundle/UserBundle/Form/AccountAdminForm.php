@@ -28,7 +28,8 @@ class AccountAdminForm extends Form
     {
         $validators = array(
             'name' => array(
-                'required' => '用户名不能为空'
+                'required' => '用户名不能为空',
+                'name' => '用户必须以字母开头由字母、数字及下划级组成的3～16位字符'
             )
         );
 
