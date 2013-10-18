@@ -170,7 +170,7 @@ class ProductIndexListener implements Registration
     {
         return array(
             'kernel.entity.delete#product' => 'deleteProductEntity',
-            'kernel.entity.beforeInsert#product' => 'insertProductIndex',
+            'kernel.entity.insert#product' => 'insertProductIndex',
             'kernel.entity.beforeUpdate#product' => 'updateProductIndex',
             'kernel.entity.save#product-price' => 'updateProductPriceIndex',
             'kernel.entity.delete#product-price' => 'deleteProductPrice',

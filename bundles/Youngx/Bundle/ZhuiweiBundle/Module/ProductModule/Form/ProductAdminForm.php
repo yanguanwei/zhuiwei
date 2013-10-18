@@ -106,7 +106,7 @@ class ProductAdminForm extends Form
 
         $productDetail = $product->getDetail();
         if (!$productDetail) {
-            $productDetail = $repository->create('product_detail');
+            $productDetail = $repository->create('product-detail');
         }
         $productDetail->set($this->toArray());
         $productDetail->set('product_id', $product->getId());
@@ -353,7 +353,7 @@ class ProductAdminForm extends Form
             if ($this->stock_price) {
                 $this->stock_price->set($stock_price);
             } else {
-                $this->stock_price = $this->context->repository()->create('product_price', array_merge($stock_price, array(
+                $this->stock_price = $this->context->repository()->create('product-price', array_merge($stock_price, array(
                             'type' => ProductPriceEntity::TYPE_STOCK
                         )));
             }
@@ -379,7 +379,7 @@ class ProductAdminForm extends Form
            if ($this->taobao_price) {
                $this->taobao_price->set($taobao_price);
            } else {
-               $this->taobao_price = $this->context->repository()->create('product_price', array_merge($taobao_price, array(
+               $this->taobao_price = $this->context->repository()->create('product-price', array_merge($taobao_price, array(
                            'type' => ProductPriceEntity::TYPE_TAOBAO
                        )));
            }
@@ -405,7 +405,7 @@ class ProductAdminForm extends Form
             if ($this->trade_price) {
                 $this->trade_price->set($trade_price);
             } else {
-                $this->trade_price = $this->context->repository()->create('product_price', array_merge($trade_price, array(
+                $this->trade_price = $this->context->repository()->create('product-price', array_merge($trade_price, array(
                             'type' => ProductPriceEntity::TYPE_TRADE
                         )));
             }
@@ -431,7 +431,7 @@ class ProductAdminForm extends Form
             if ($this->customer_price) {
                 $this->customer_price->set($customer_price);
             } else {
-                $this->customer_price = $this->context->repository()->create('product_price', array_merge($customer_price, array(
+                $this->customer_price = $this->context->repository()->create('product-price', array_merge($customer_price, array(
                             'type' => ProductPriceEntity::TYPE_CUSTOMER
                         )));
             }
