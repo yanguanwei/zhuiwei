@@ -4,6 +4,7 @@ namespace Youngx\Bundle\ZhuiweiBundle\Module\ProductModule\Form;
 
 use Youngx\Bundle\AdminBundle\Module\FileModule\Form\FileForm;
 use Youngx\Bundle\ZhuiweiBundle\Module\ProductModule\Entity\ProductEntity;
+use Youngx\MVC\Event\GetResponseEvent;
 use Youngx\MVC\Form;
 use Youngx\MVC\RenderableResponse;
 use Youngx\MVC\Widget\FormWidget;
@@ -14,10 +15,25 @@ class ProductPictureAdminForm extends FileForm
      * @var ProductEntity
      */
     protected $product;
+    protected $allowedExtensions = array(
+            'jpg', 'jpeg', 'gif', 'png', 'bmp'
+        );
 
     public function id()
     {
         return 'product-admin-picture';
+    }
+
+    protected function submit(GetResponseEvent $event)
+    {
+        parent::submit($event);
+        if ($this->fileEntities) {
+            $this->context->flash()->add('success', '文件上传成功');
+        }
+
+        $event->setResponse(
+            $this->context->redirectResponse($this->context->request()->getUri())
+        );
     }
 
     protected function initRequest()

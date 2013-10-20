@@ -2,8 +2,15 @@
 
 $form = $this->widget;
 
+//$category = $form->field('category_id')->label('品类')->select_category(array(
+//        '#chosen' => array('search_contains' => true),
+//    ));
+
+$category = $form->field('category_id')->label('品类')->cxselect_category();
+
 $code = $form->field('code')->label('产品编号')->text();
 $title = $form->field('title')->label('产品标题')->text();
+$status = $form->field('status')->label('状态')->select_product_status();
 
 $unit = $form->field('unit_id')->label('单位')->vocabulary(array(
         '#vocabulary' => 'unit'
@@ -53,6 +60,35 @@ $customer_price = $form->field('customer_price[price]')->label('大客户推荐�
     ->text(array('placeholder' => '价格'))
     ->input('customer_price[op]', 'product-price-op')
     ->input('customer_price[quantity]', 'text', array('placeholder' => '起订量'));
+
+$picture1 = $this->widget->input('pictures[0]', 'image_uploader', array(
+        '#url' => $this->url('product-picture', array('product' => $this->product_id, 'sort' => 0)),
+        '#imagePlaceholder' => $this->asset_url('/Zhuiwei/images/product-picture-main.jpg'),
+        '#button' => '上传图片',
+        '#previewWidth' => 100,
+        '#previewHeight' => 100
+    ));
+$picture2 = $this->widget->input('pictures[1]', 'image_uploader', array(
+        '#url' => $this->url('product-picture', array('product' => $this->product_id, 'sort' => 1)),
+        '#imagePlaceholder' => $this->asset_url('/Zhuiwei/images/product-picture.jpg'),
+        '#button' => '上传图片',
+        '#previewWidth' => 100,
+        '#previewHeight' => 100
+    ));
+$picture3 = $this->widget->input('pictures[2]', 'image_uploader', array(
+        '#url' => $this->url('product-picture', array('product' => $this->product_id, 'sort' => 2)),
+        '#imagePlaceholder' => $this->asset_url('/Zhuiwei/images/product-picture.jpg'),
+        '#button' => '上传图片',
+        '#previewWidth' => 100,
+        '#previewHeight' => 100
+    ));
+$picture4 = $this->widget->input('pictures[3]', 'image_uploader', array(
+        '#url' => $this->url('product-picture', array('product' => $this->product_id, 'sort' => 3)),
+        '#imagePlaceholder' => $this->asset_url('/Zhuiwei/images/product-picture.jpg'),
+        '#button' => '上传图片',
+        '#previewWidth' => 100,
+        '#previewHeight' => 100
+    ));
 ?>
 
 <div class="row">
@@ -62,13 +98,22 @@ $customer_price = $form->field('customer_price[price]')->label('大客户推荐�
         echo $this->widget('Box', array(
                     '#title' => '产品信息',
                     '#body' => array(
-                        '#content' => $code . $title . $inventory . $unit . $weight . $production_time . $shipping_time
+                        '#content' => $code . $title . $status . $inventory . $unit . $weight . $production_time . $shipping_time
                     )
                 ));
         ?>
     </div>
 
     <div class="col-xs-12 col-sm-6 widget-container-span ui-sortable">
+        <?php
+        echo $this->widget('Box', array(
+                '#title' => '产品品类',
+                '#body' => array(
+                    '#content' => $category
+                )
+            ));
+        ?>
+
         <?php
         echo $this->widget('Box', array(
                 '#title' => '买家信息',
@@ -83,6 +128,22 @@ $customer_price = $form->field('customer_price[price]')->label('大客户推荐�
                 '#title' => '价格信息',
                 '#body' => array(
                     '#content' => $trade_price . $taobao_price . $stock_price . $customer_price
+                )
+            ));
+        ?>
+    </div>
+</div>
+
+<div class="space-24"></div>
+
+<div class="row">
+    <div class="col-xs-12 col-sm-12 widget-container-span ui-sortable">
+        <?php
+
+        echo $this->widget('Box', array(
+                '#title' => '产品图片',
+                '#body' => array(
+                    '#content' => $picture1 . $picture2 . $picture3 . $picture4
                 )
             ));
         ?>

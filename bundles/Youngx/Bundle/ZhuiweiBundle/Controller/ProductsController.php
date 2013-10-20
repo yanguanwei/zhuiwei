@@ -2,6 +2,7 @@
 
 namespace Youngx\Bundle\ZhuiweiBundle\Controller;
 
+use Youngx\Bundle\ZhuiweiBundle\Module\ProductModule\Entity\ProductEntity;
 use Youngx\MVC\Action;
 use Youngx\MVC\RenderableResponse;
 
@@ -31,7 +32,9 @@ class ProductsController extends Action
     protected function query()
     {
         $db = $this->context->db();
-        $select = $db->select(array('zw_index_product', 'zwip'), 'product_id');
+        $select = $db->select(array('zw_index_product', 'zwip'), 'product_id')
+            ->innerJoin(array('zw_index_product_status', 'zwips'), 'zwips.product_id=zwip.product_id')
+            ->where("zwips.status=?", ProductEntity::STATUS_ON);
 
         if ($this->category_id) {
             $select->innerJoin(array('zw_index_product_category', 'zwipc'), 'zwipc.product_id=zwip.product_id');

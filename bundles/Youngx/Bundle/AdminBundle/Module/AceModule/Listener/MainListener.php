@@ -2,6 +2,7 @@
 
 namespace Youngx\Bundle\AdminBundle\Module\AceModule\Listener;
 
+use Youngx\Bundle\jQueryBundle\Input\ImageUploaderInput;
 use Youngx\Bundle\jQueryBundle\Widget\ColorBoxWidget;
 use Youngx\EventHandler\Event\GetSortableArrayEvent;
 use Youngx\EventHandler\Registration;
@@ -139,7 +140,7 @@ class MainListener implements Registration
 
     public function formatSelectHtmlForChosen(Html $html)
     {
-        $html->addClass('width-95 chosen-select');
+        $html->addClass('width-90 chosen-select');
     }
 
     public function formatTableWidget(TableWidget $table)
@@ -411,30 +412,78 @@ code;
         }
     }
 
+    public function formatImageUploaderHtml(ImageUploaderInput $input)
+    {
+        $input->find('file')->find('button')->addClass('btn btn-primary');
+    }
+
+    public function renderMessages(GetSortableArrayEvent $event)
+    {
+        foreach ($this->context->flash()->all() as $type => $messages) {
+            foreach ($messages as $i => $message) {
+                $event->set("{$type}.{$i}", $this->context->html('message', array(
+                            '#type' => $type,
+                            '#content' => $message,
+                            '#skin' => 'ace'
+                        )), -100);
+            }
+        }
+    }
+
+    public function formatMessageHtml(Html\MessageHtml $html)
+    {
+        $type = $html->getType();
+
+        if ($type == 'error') {
+            $type = 'danger';
+            $icon = 'remove';
+        } else {
+            if ($type == 'success') {
+                $icon = 'ok';
+            }
+        }
+
+        $html->addClass('alert-'.$type);
+
+        if (isset($icon)) {
+            $html->set('#icon', $icon);
+        }
+
+        $html->addClass('alert')
+            ->prepend($this->context->html('button', array(
+                        '#icon' => 'remove',
+                        'data-dismiss' => 'alert',
+                        'class' => 'close'
+                    )));
+    }
+
     public static function registerListeners()
     {
         return array(
             'kernel.assets@menu-group:admin' => 'registerCoreAssets',
             'kernel.block#head@menu-group:admin' => 'renderHeadBlock',
-            'kernel.renderable.layout@menu-group:admin' => 'layout',
-            'kernel.renderable.layout@menu:admin-login' => 'loginLayout',
-            'kernel.widget.format#breadcrumbs@menu-group:admin' => 'formatBreadcrumbsWidget',
-            'kernel.widget.format#jquery-colorbox@menu-group:admin' => 'formatColorBoxWidget',
-            'kernel.input.format#datepicker' => 'formatDatepickerInput',
+            'kernel.block#sidebar@menu-group:admin' => 'renderSidebarMenuBlock',
+            'kernel.block#submenu@menu-group:admin' => 'renderSubmenuBlock',
+            'kernel.block#content@menu-group:admin' => 'renderMessages',
             'kernel.renderable.config#subtitle@menu-group:admin' => 'formatSubtitleOption',
             'kernel.renderable.config#submenu@menu-group:admin' => 'formatSubmenuConfig',
-            'kernel.html#select@config:chosen' => 'formatSelectHtmlForChosen',
+            'kernel.renderable.layout@menu-group:admin' => 'layout',
+            'kernel.renderable.layout@menu:admin-login' => 'loginLayout',
+            'kernel.renderable.format@menu-group:admin' => 'formatViewForTabMenu',
+            'kernel.widget.format#breadcrumbs@menu-group:admin' => 'formatBreadcrumbsWidget',
+            'kernel.widget.format#jquery-colorbox@menu-group:admin' => 'formatColorBoxWidget',
             'kernel.widget.format#table' => 'formatTableWidget',
             'kernel.widget.format#box' => 'formatBoxWidget',
-            "kernel.html.format#checkbox" => 'formatCheckboxHtml',
-            "kernel.html.format#radio" => 'formatRadioHtml',
+            'kernel.widget.format#form@skin:search' => 'formatSearchFormWidget',
+            "kernel.html.format#checkbox@menu-group:admin" => 'formatCheckboxHtml',
+            "kernel.html.format#radio@menu-group:admin" => 'formatRadioHtml',
+            "kernel.html.format#image-uploader@menu-group:admin" => 'formatImageUploaderHtml',
+            'kernel.html#select@config:chosen' => 'formatSelectHtmlForChosen',
             'kernel.widget.format#wizard' => 'formatWizardWidget',
             'kernel.action.render#wizard' => 'renderWizardAction',
             'kernel.input.format#file' => 'formatFileInput',
-            'kernel.block#sidebar@menu-group:admin' => 'renderSidebarMenuBlock',
-            'kernel.block#submenu@menu-group:admin' => 'renderSubmenuBlock',
-            'kernel.widget.format#form@skin:search' => 'formatSearchFormWidget',
-            'kernel.renderable.format@menu-group:admin' => 'formatViewForTabMenu'
+            'kernel.input.format#datepicker' => 'formatDatepickerInput',
+            'kernel.html#message@skin:ace' => 'formatMessageHtml',
         );
     }
 }

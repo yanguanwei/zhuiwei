@@ -2,6 +2,7 @@
 
 namespace Youngx\Bundle\CategoryBundle\Listener;
 
+use Youngx\Bundle\CategoryBundle\Input\SelectCategoryInput;
 use Youngx\EventHandler\Registration;
 use Youngx\MVC\Context;
 
@@ -31,10 +32,16 @@ class MainListener implements Registration
         return $this->context->input('select', $attributes);
     }
 
+    public function cxselectCategoryInput(array $attributes)
+    {
+        return new SelectCategoryInput($this->context, $attributes);
+    }
+
     public static function registerListeners()
     {
         return array(
             'kernel.input#select-category' => 'selectCategory',
+            'kernel.input#cxselect-category' => 'cxselectCategoryInput',
         );
     }
 }

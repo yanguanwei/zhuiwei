@@ -17,6 +17,11 @@ class FactoryAdminController
         return $context->actionResponse('Table:BaseFactoryAdmin@Zhuiwei:Seller');
     }
 
+    public function deleteAction(Context $context)
+    {
+        return $context->actionResponse('Action:FactoryDelete@Zhuiwei:Seller');
+    }
+
     public function editAction(Context $context, FactoryEntity $factory)
     {
         return $context->actionResponse('Form:FactoryAdmin@Zhuiwei:Seller', array(

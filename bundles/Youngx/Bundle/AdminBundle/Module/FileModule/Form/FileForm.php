@@ -21,6 +21,8 @@ class FileForm extends Form
      * @var Entity
      */
     protected $entity;
+
+    protected $entityType;
     /**
      * @var UserEntity
      */
@@ -31,9 +33,16 @@ class FileForm extends Form
     protected $baseUri = 'public://';
 
     /**
+     * @var FileEntity
+     */
+    protected $oldFile;
+
+    /**
      * @var FileEntity[]
      */
     protected $fileEntities = array();
+
+    protected $allowedExtensions = array();
 
     public function id()
     {
@@ -42,7 +51,8 @@ class FileForm extends Form
 
     protected function initRequest()
     {
-        if (!$this->entity) {
+        $entityType = $this->getEntityType();
+        if (!$entityType) {
             throw new \Exception('文件上传未指定实体');
         }
 
@@ -51,39 +61,60 @@ class FileForm extends Form
         }
     }
 
+    protected function validate(Form\FormErrorHandler $feh)
+    {
+        foreach ($this->files as $name => $file) {
+            if (!in_array(strtolower($file->getClientOriginalExtension()), $this->allowedExtensions)) {
+                $feh->add($name, '非法的文件格式：' . $file->getClientOriginalExtension());
+            }
+        }
+    }
+
     protected function submit(GetResponseEvent $event)
     {
         if ($this->files && null != reset($this->files)) {
             $file = $this->context->repository()->create('file', array(
                     'uid' => $this->user->getUid(),
-                    'entity_type' => $this->entity->type(),
-                    'entity_id' => $this->entity->identifier(),
+                    'entity_type' => $this->getEntityType(),
+                    'entity_id' => $this->entity ? $this->entity->identifier() : 0,
                     'created_at' => Y_TIME
                 ));
             $relativePath = date('Y/m/', Y_TIME);
             $basePath = $this->context->locate($this->baseUri) . '/'.$relativePath;
             foreach ($this->files as $key => $upload) {
                 if ($upload->isValid()) {
-                    $upload->move($basePath, $upload->getClientOriginalName());
+                    $filename = md5(microtime(true) . $upload->getClientOriginalName()) . '.' . $upload->getClientOriginalExtension();
+                    $upload->move($basePath, $filename);
                     $clone  = clone $file;
                     $clone->set(array(
-                            'filename' => $upload->getClientOriginalName(),
+                            'filename' => $filename,
                             'mime_type' => $upload->getClientMimeType(),
-                            'uri' => $this->baseUri . $relativePath . $upload->getClientOriginalName()
+                            'uri' => $this->baseUri . $relativePath . $filename
                         ));
+
+                    $this->onFileBeforeSave($key, $clone, $upload);
                     $clone->save();
+                    $this->onFileBeforeSave($key, $clone, $upload);
                     $this->fileEntities[$key] = $clone;
                 }
             }
 
-            $this->context->flash()->add('success', '文件上传成功');
-        } else {
-            $this->context->flash()->add('warning', '没有可上传的文件！');
-        }
+            if ($this->oldFile) {
+                $this->oldFile->delete();
+            }
 
-        $event->setResponse(
-            $this->context->redirectResponse($this->context->request()->getUri())
-        );
+            //$this->context->flash()->add('success', '文件上传成功');
+        } else {
+            //$this->context->flash()->add('warning', '没有可上传的文件！');
+        }
+    }
+
+    protected function onFileBeforeSave($key, FileEntity $file, UploadedFile $upload)
+    {
+    }
+
+    protected function onFileSave($key, FileEntity $file, UploadedFile $upload)
+    {
     }
 
     protected function render(RenderableResponse $response)
@@ -193,5 +224,32 @@ class FileForm extends Form
     public function getFileEntities()
     {
         return $this->fileEntities;
+    }
+
+    /**
+     * @param mixed $entityType
+     */
+    public function setEntityType($entityType)
+    {
+        $this->entityType = $entityType;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEntityType()
+    {
+        return $this->entityType ?: ($this->entity ? $this->entity->type() : null);
+    }
+
+    /**
+     * @param mixed $oldFile
+     */
+    public function setOldFile($oldFile)
+    {
+        $oldFile = intval($oldFile);
+        if ($oldFile) {
+            $this->oldFile = $this->context->repository()->load('file', $oldFile);
+        }
     }
 }

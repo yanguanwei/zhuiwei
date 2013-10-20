@@ -6,10 +6,10 @@
                 <p>
                     <a href="#">粉丝买家首页</a>
                     <a href="#">明星卖家首页</a>
-                    <a href="#">上传产品</a>
+                    <a href="<?php echo $this->url('seller-product-add');?>">上传产品</a>
                     <a href="#">粉丝买家注册</a>
                     <a href="#">明星卖家注册</a>
-                    <a href="#">我的超值存货空间</a>
+                    <a href="<?php echo $this->url('user-home');?>">我的超值存货空间</a>
                 </p>
             </div>
 

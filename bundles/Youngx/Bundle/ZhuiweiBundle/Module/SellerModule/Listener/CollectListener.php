@@ -11,6 +11,9 @@ class CollectListener implements Registration
 {
     public function collectMenu(MenuCollection $collection)
     {
+        $collection->add('seller-logo-upload', '/seller/logo-upload/{user}', '图片上传', 'SellerLogoUpload@Zhuiwei:Seller')
+            ->setRequirement('user', '\d+', 'user');
+
         $admin = $collection->getCollection('admin');
         $admin->add('seller-admin', '/user/seller', '卖家管理', 'Admin@Zhuiwei:Seller', Menu::MENU_ROOT_TAB_DEFAULT);
         $admin->add('seller-admin-list', '/user/seller/list', '卖家列表', 'Admin@Zhuiwei:Seller', Menu::MENU_TAB);
@@ -20,7 +23,7 @@ class CollectListener implements Registration
         $admin->add('seller-admin-vip-willing', '/user/seller/{user}/vip/willing', '有意成为付费客户', 'Admin::setWilling@Zhuiwei:Seller')
             ->setRequirement('user', '\d+', 'user');
 
-        $admin->add('seller-admin-vip-edit', '/user/seller/{user}/vip', 'VIP信息', 'Admin::vipEdit@Zhuiwei:Seller')
+        $admin->add('seller-admin-edit', '/user/seller/{user}/edit', '卖家信息', 'Admin::edit@Zhuiwei:Seller')
             ->setRequirement('user', '\d+', 'user');
 
         $admin->add('seller-import', '/user/seller/import', '导入卖家', 'ImportSeller@Zhuiwei:Seller', Menu::MENU);

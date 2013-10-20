@@ -9,7 +9,7 @@ class KernelBundle extends Bundle
     public function modules()
     {
         return array(
-            'Bootstrap', 'CKEditor', 'CKFinder'
+            'Bootstrap', 'CKEditor', 'CKFinder', 'UEditor'
         );
     }
 }

@@ -47,6 +47,15 @@ class FactoryAdminForm extends Form
         );
     }
 
+    protected function registerValidators()
+    {
+        return array(
+            'name' => array(
+                'required' => '工厂名称不能为空'
+            )
+        );
+    }
+
     protected function submit(GetResponseEvent $event)
     {
         $factory = $this->factory ?: $this->context->repository()->create('factory');

@@ -2,6 +2,7 @@
 
 namespace Youngx\Bundle\jQueryBundle\Listener;
 
+use Youngx\Bundle\jQueryBundle\Input\ImageUploaderInput;
 use Youngx\EventHandler\Registration;
 use Youngx\MVC\Context;
 use Youngx\MVC\Event\GetHtmlEvent;
@@ -38,10 +39,16 @@ code;
         }
     }
 
+    public function imageUploaderInput(array $attributes)
+    {
+        return new ImageUploaderInput($this->context, $attributes);
+    }
+
     public static function registerListeners()
     {
         return array(
             //'kernel.input#datepicker' => 'datepicker',
+            'kernel.input#image-uploader' => 'imageUploaderInput'
         );
     }
 }

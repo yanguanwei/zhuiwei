@@ -11,22 +11,28 @@ class CollectListener implements Registration
 {
     public function collectMenu(MenuCollection $collection)
     {
+        $collection->add('product-picture', '/product/picture-upload/{sort}/{product}', '上传产品图片', 'ProductPicture@Zhuiwei:Product')
+            ->setRequirement('product', '\d+', 'product')
+            ->setDefault('product', 0)
+            ->setAccess('product-picture');
+
         $admin = $collection->getCollection('admin');
 
         $admin->add('product-admin', '/product', '产品管理', 'Admin@Zhuiwei:Product', Menu::MENU_ROOT)
             ->addAttribute('#icon', 'shopping-cart');
 
         $admin->add('product-admin-add', '/product/add', '添加产品', 'Admin::add@Zhuiwei:Product', Menu::MENU);
-        $admin->add('product-admin-edit', '/product/{product}', '编辑产品', 'Admin::edit@Zhuiwei:Product', Menu::TAB_DEFAULT_SELF)
+        $admin->add('product-admin-edit', '/product/{product}', '编辑产品', 'Admin::edit@Zhuiwei:Product')
             ->setRequirement('product', '\d+', 'product');
 
-        $admin->add('product-admin-category', '/product/{product}/category', '产品品类', 'Admin::category@Zhuiwei:Product', Menu::TAB)
-            ->setRequirement('product', '\d+', 'product');
+//        $admin->add('product-admin-category', '/product/{product}/category', '产品品类', 'Admin::category@Zhuiwei:Product', Menu::TAB)
+//            ->setRequirement('product', '\d+', 'product');
 
-        $admin->add('product-admin-picture', '/product/{product}/picture', '产品图片', 'Admin::picture@Zhuiwei:Product', Menu::TAB)
-            ->setRequirement('product', '\d+', 'product');
+//        $admin->add('product-admin-picture', '/product/{product}/picture', '产品图片', 'Admin::picture@Zhuiwei:Product', Menu::TAB)
+//            ->setRequirement('product', '\d+', 'product');
 
         $admin->add('product-admin-delete', '/product/delete', '删除产品', 'Admin::delete@Zhuiwei:Product');
+
 
         $admin->add('product-admin-picture-default', '/product/{product}/picture/{file}', '删除产品', 'Admin::defaultPicture@Zhuiwei:Product')
             ->setRequirement('product', '\d+', 'product')

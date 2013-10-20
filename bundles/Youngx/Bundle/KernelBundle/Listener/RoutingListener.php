@@ -85,7 +85,7 @@ class RoutingListener implements Registration
                 $events = array();
                 if ($access) { $events[] = "kernel.access.deny#{$access}";}
                 $events[] = 'kernel.access.deny';
-                $handler->triggerWithMenu($events, $event, $request, $access);
+                $handler->triggerOneWithMenu($events, $event, $request, $access);
                 $this->throwHttpException($event);
             }
         } catch (ResourceNotFoundException $e) {

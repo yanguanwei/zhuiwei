@@ -9,7 +9,7 @@ use Youngx\MVC\Form;
 use Youngx\MVC\RenderableResponse;
 use Youngx\MVC\Widget\FormWidget;
 
-class SellerVipAdminForm extends Form
+class SellerAdminForm extends Form
 {
     /**
      * @var UserEntity
@@ -19,10 +19,11 @@ class SellerVipAdminForm extends Form
      * @var
      */
     protected $seller;
-    protected $status;
+    protected $status = 0;
     protected $type;
     protected $started_at;
     protected $ended_at;
+    protected $logo;
 
     public function id()
     {
@@ -47,7 +48,7 @@ class SellerVipAdminForm extends Form
 
         $this->seller = $seller;
 
-        $this->context->flash()->add('success', sprintf('卖家 <i>%s</i> 的VIP信息保存成功！', $this->user->getName()));
+        $this->context->flash()->add('success', sprintf('卖家 <i>%s</i> 的信息保存成功！', $this->user->getName()));
 
         $event->setResponse($this->context->redirectResponse($this->context->generateUrl('seller-admin-vip')));
     }
@@ -60,7 +61,7 @@ class SellerVipAdminForm extends Form
                     'cancel' => $this->context->generateUrl('seller-admin-vip')
                 )))->addVariable('#subtitle', array(
                     sprintf('卖家 <i>%s</i>', $this->user->getName()),
-                    'VIP信息'
+                    '卖家信息'
                 ));
     }
 
@@ -76,6 +77,12 @@ class SellerVipAdminForm extends Form
 
         $widget->addField('started_at')->label('起始日期')->datepicker();
         $widget->addField('ended_at')->label('截止日期')->datepicker();
+
+        $widget->addField('logo')->label('Logo')->image_uploader(array(
+                '#url' => $this->context->generateUrl('seller-logo-upload', array(
+                        'user' => $this->user->getUid()
+                    ))
+            ));
     }
 
     /**
@@ -85,7 +92,7 @@ class SellerVipAdminForm extends Form
     {
         $this->user = $user;
         $seller = $this->context->repository()->load('seller', $user->getUid());
-        if ($seller) {
+        if ($seller && $seller instanceof SellerEntity) {
             $this->setSeller($seller);
         }
     }
@@ -185,5 +192,21 @@ class SellerVipAdminForm extends Form
     public function getSeller()
     {
         return $this->seller;
+    }
+
+    /**
+     * @param mixed $logo
+     */
+    public function setLogo($logo)
+    {
+        $this->logo = $logo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLogo()
+    {
+        return $this->logo;
     }
 }

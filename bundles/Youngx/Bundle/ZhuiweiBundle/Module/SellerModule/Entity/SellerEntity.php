@@ -2,6 +2,7 @@
 
 namespace Youngx\Bundle\ZhuiweiBundle\Module\SellerModule\Entity;
 
+use Youngx\Bundle\AdminBundle\Module\FileModule\Entity\FileEntity;
 use Youngx\Database\Entity;
 
 class SellerEntity extends Entity
@@ -21,6 +22,20 @@ class SellerEntity extends Entity
     protected $type;
     protected $started_at;
     protected $ended_at;
+    protected $logo;
+    protected $factory_name;
+
+    public function __sleep()
+    {
+        $fields = $this->fields();
+
+        if (null === $this->factory_name) {
+            $this->getFactoryName();
+        }
+        $fields[] = 'factory_name';
+
+        return $fields;
+    }
 
     public static function type()
     {
@@ -40,7 +55,7 @@ class SellerEntity extends Entity
     public static function fields()
     {
         return array(
-            'uid', 'factory_id', 'status', 'type', 'started_at', 'ended_at'
+            'uid', 'factory_id', 'status', 'type', 'started_at', 'ended_at', 'logo'
         );
     }
 
@@ -155,5 +170,46 @@ class SellerEntity extends Entity
     public function getUid()
     {
         return $this->uid;
+    }
+
+    /**
+     * @param mixed $logo
+     */
+    public function setLogo($logo)
+    {
+        $this->logo = $logo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLogo()
+    {
+        return $this->logo;
+    }
+
+    /**
+     * @return FileEntity | null
+     */
+    public function getLogoFile()
+    {
+        return $this->logo ? $this->repository()->load('file', $this->logo) : null;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFactoryName()
+    {
+        if (null === $this->factory_name) {
+            $factory = $this->getFactory();
+
+            if ($factory) {
+                $this->factory_name = $factory->getName();
+            } else {
+                $this->factory_name = '';
+            }
+        }
+        return $this->factory_name;
     }
 }

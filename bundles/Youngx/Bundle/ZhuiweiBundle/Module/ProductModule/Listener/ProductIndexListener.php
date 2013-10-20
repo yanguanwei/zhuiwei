@@ -29,10 +29,13 @@ class ProductIndexListener implements Registration
         $productId = $entity->getId();
 
         $db->delete('zw_index_product', "product_id='{$productId}'");
+        $db->delete('zw_index_product_status', "product_id='{$productId}'");
+        $db->delete('zw_index_product_price_stock', "product_id='{$productId}'");
         $db->delete('zw_index_product_category', "product_id='{$productId}'");
         $db->delete('zw_index_product_district', "product_id='{$productId}'");
         $db->delete('zw_index_product_user', "product_id='{$productId}'");
         $db->delete('zw_index_product_title', "product_id='{$productId}'");
+        $db->delete('zw_index_product_created', "product_id='{$productId}'");
     }
 
     public function deleteProductPrice(ProductPriceEntity $entity)
@@ -55,6 +58,28 @@ class ProductIndexListener implements Registration
                     'price' => $entity->getPrice()
                 ));
         }
+    }
+
+    protected function updateProductCreatedIndex(ProductEntity $entity)
+    {
+        $productId = $entity->getId();
+        $db = $this->context->db();
+        //$db->delete('zw_index_product_created', "product_id='{$productId}'");
+        $db->insert('zw_index_product_created', array(
+                'product_id' => $productId,
+                'created' => $entity->getCreatedAt()
+            ));
+    }
+
+    protected function updateProductStatusIndex(ProductEntity $entity)
+    {
+        $productId = $entity->getId();
+        $db = $this->context->db();
+        $db->delete('zw_index_product_status', "product_id='{$productId}'");
+        $db->insert('zw_index_product_status', array(
+                'product_id' => $productId,
+                'status' => $entity->getStatus()
+            ));
     }
 
     protected function updateProductCategoryIndex(ProductEntity $entity)
@@ -144,6 +169,10 @@ class ProductIndexListener implements Registration
             if ($unchanged->getTitle() != $entity->getTitle()) {
                 $this->updateProductTitleIndex($entity);
             }
+
+            if ($unchanged->getStatus() != $entity->getStatus()) {
+                $this->updateProductStatusIndex($entity);
+            }
         }
     }
 
@@ -164,6 +193,10 @@ class ProductIndexListener implements Registration
         if ($entity->getTitle()) {
             $this->updateProductTitleIndex($entity);
         }
+
+        $this->updateProductStatusIndex($entity);
+
+        $this->updateProductCreatedIndex($entity);
     }
 
     public static function registerListeners()

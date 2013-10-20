@@ -27,7 +27,6 @@ class FactoryEntity extends Entity
     protected $established_at;
     protected $area;
     protected $capacity;
-    protected $payments;
 
     protected $picture1;
     protected $picture2;
@@ -55,7 +54,7 @@ class FactoryEntity extends Entity
         return array(
             'id', 'uid', 'status', 'name', 'industries', 'telephone', 'mobilephone', 'district_id',
             'address', 'corporation', 'identity1', 'identity2', 'business_license', 'occ', 'description',
-            'established_at', 'area', 'capacity', 'payments', 'picture1', 'picture2', 'picture3', 'picture4', 'picture5'
+            'established_at', 'area', 'capacity', 'picture1', 'picture2', 'picture3', 'picture4', 'picture5'
         );
     }
 
@@ -310,22 +309,6 @@ class FactoryEntity extends Entity
     public function getOccFile()
     {
         return $this->occ ? $this->repository()->load('file', $this->occ) : null;
-    }
-
-    /**
-     * @param mixed $payments
-     */
-    public function setPayments($payments)
-    {
-        $this->payments = $payments;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPayments()
-    {
-        return $this->payments;
     }
 
     /**

@@ -1,8 +1,9 @@
 <?php
 
-namespace Youngx\Bundle\AdminBundle\Module\DistrictModule\Input;
+namespace Youngx\Bundle\CategoryBundle\Input;
 
 use Youngx\Bundle\AdminBundle\Module\DistrictModule\Entity\DistrictEntity;
+use Youngx\Bundle\CategoryBundle\Entity\CategoryEntity;
 use Youngx\Bundle\jQueryBundle\Input\CXSelectInput;
 
 class SelectCategoryInput extends CXSelectInput
@@ -17,8 +18,8 @@ class SelectCategoryInput extends CXSelectInput
 
     public function setValue($value)
     {
-        $current = $this->context->repository()->load('district', $value);
-        if ($current && $current instanceof DistrictEntity) {
+        $current = $this->context->repository()->load('category', $value);
+        if ($current && $current instanceof CategoryEntity) {
             $paths = $current->getPaths();
             $values = array();
             foreach ($paths as $i => $entity) {

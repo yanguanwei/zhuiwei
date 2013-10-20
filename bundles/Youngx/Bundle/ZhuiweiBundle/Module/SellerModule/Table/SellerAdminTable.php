@@ -61,11 +61,11 @@ class SellerAdminTable extends UserAdminTable
         $seller = $this->context->repository()->load('seller', $entity->getUid());
 
         $vip = $this->context->html('a', array(
-                'href' => $this->context->generateUrl('seller-admin-vip-edit', array(
+                'href' => $this->context->generateUrl('seller-admin-edit', array(
                         'user' => $entity->getId(),
                         'returnUrl' => $returnUrl
                     )),
-                '#content' => 'VIP'
+                '#content' => '查看'
             ));
 
         $factory = $this->context->html('a', array(

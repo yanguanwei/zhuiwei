@@ -7,7 +7,7 @@ $status = $widget->field('status')->label('审核状态')->radio(array(
             '无效', '有效'
         )
     ));
-$name = $widget->field('name')->label('公司名称')->text();
+$name = $widget->field('name')->label('工厂名称')->text();
 $telephone = $widget->field('telephone')->label('固定电话')->text();
 $mobilephone = $widget->field('mobilephone')->label('手机号码')->text();
 $district_id = $widget->field('district_id')->label('地区')->select_district();
@@ -19,7 +19,6 @@ $established_at = $widget->field('established_at')->label('成产时间')->datep
 $area = $widget->field('area')->label('面积数')->text();
 $capacity = $widget->field('capacity')->label('月产能')->text();
 $description = $widget->field('description')->label('公司简介')->textarea();
-$payments = $widget->field('payments')->label('支付方式')->textarea();
 ?>
 
 <div class="row">
@@ -64,7 +63,7 @@ $payments = $widget->field('payments')->label('支付方式')->textarea();
         echo $this->widget('Box', array(
                 '#title' => '详细信息',
                 '#body' => array(
-                    '#content' => $payments . $description
+                    '#content' => $description
                 )
             ));
         ?>

@@ -82,7 +82,7 @@ class NewsForm extends ArchiveForm
                 '#chosen' => true
             ));
         $widget->addField('cover')->label('图片')->ckfinder();
-        $widget->addField('content')->label('内容')->ckeditor();
+        $widget->addField('content')->label('内容')->ckeditor_full();
     }
 
     public function id()

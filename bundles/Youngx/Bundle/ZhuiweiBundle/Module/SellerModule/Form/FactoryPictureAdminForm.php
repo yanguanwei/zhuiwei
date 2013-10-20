@@ -22,6 +22,9 @@ class FactoryPictureAdminForm extends FileForm
     protected $picture3;
     protected $picture4;
     protected $picture5;
+    protected $allowedExtensions = array(
+            'jpg', 'jpeg', 'gif', 'png', 'bmp'
+        );
 
     public function id()
     {
@@ -44,7 +47,12 @@ class FactoryPictureAdminForm extends FileForm
                 $this->factory->set($key, $file->getId());
             }
             $this->factory->save();
+            $this->context->flash()->add('success', '文件上传成功');
         }
+
+        $event->setResponse(
+            $this->context->redirectResponse($this->context->request()->getUri())
+        );
     }
 
     protected function render(RenderableResponse $response)

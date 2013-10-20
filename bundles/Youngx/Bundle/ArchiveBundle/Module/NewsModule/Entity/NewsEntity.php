@@ -14,7 +14,7 @@ class NewsEntity extends Entity
      */
     public function getArchive()
     {
-        return $this->resolveExtraFieldValue('archive');
+        return $this->repository()->load('archive', $this->id);
     }
 
     public static function type()

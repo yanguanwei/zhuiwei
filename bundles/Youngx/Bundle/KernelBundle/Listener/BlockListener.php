@@ -19,18 +19,6 @@ class BlockListener implements Registration
         $this->context = $context;
     }
 
-    public function renderMessages(GetSortableArrayEvent $event)
-    {
-        foreach ($this->context->flash()->all() as $type => $messages) {
-            foreach ($messages as $i => $message) {
-                $event->set("{$type}.{$i}", $this->context->html('message', array(
-                            '#type' => $type,
-                            '#content' => $message
-                        )), -100);
-            }
-        }
-    }
-
     public function debug(GetSortableArrayEvent $event)
     {
         if ($this->context->app()->isDebug()) {
@@ -66,12 +54,35 @@ class BlockListener implements Registration
                 )));
     }
 
+    public function formatSubtitleConfig($subtitle)
+    {
+        $this->context->block('title', $subtitle);
+    }
+
+    public function renderTitleBlock(GetSortableArrayEvent $event)
+    {
+        $titles = $event->all();
+        foreach ($titles as $i => $title) {
+            if (is_array($title)) {
+                $titles[$i] = implode(" | ", $title);
+            }
+        }
+        return preg_replace('/<\/?.+?>/', '', implode(" | ", $titles));
+    }
+
+    public function renderBlock(GetSortableArrayEvent $event)
+    {
+        return implode("\n", $event->all());
+    }
+
     public static function registerListeners()
     {
         return array(
-            'kernel.block#content' => 'renderMessages',
+            'kernel.renderable.config#subtitle' => 'formatSubtitleConfig',
             'kernel.block#breadcrumbs' => 'breadcrumbs',
-            'kernel.block#body' => array('debug', 1024)
+            'kernel.block#body' => array('debug', 1024),
+            'kernel.block.render' => 'renderBlock',
+            'kernel.block.render#title' => 'renderTitleBlock'
         );
     }
 }

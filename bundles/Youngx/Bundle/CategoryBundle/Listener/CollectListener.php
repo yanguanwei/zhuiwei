@@ -18,7 +18,8 @@ class CollectListener implements Registration
 
     public function collectMenu(MenuCollection $collection)
     {
-        $collection->add('category-ajax-cxselect', '/category/ajax/cxselect.json', '地区数据', 'Ajax::cxselect@Category');
+        $collection->add('category-ajax-cxselect', '/category/ajax/cxselect.json', '地区数据', 'Ajax::cxselect@Category')
+            ->setAccess('category-ajax-select');
 
         $admin = $collection->getCollection('admin');
 

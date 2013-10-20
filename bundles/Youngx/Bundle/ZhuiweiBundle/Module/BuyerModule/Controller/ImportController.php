@@ -9,6 +9,7 @@ use Youngx\MVC\Action\WizardAction;
 use Youngx\MVC\Action\WizardActionCollection;
 use Youngx\MVC\Event\GetResponseEvent;
 use Youngx\MVC\RenderableResponse;
+use Youngx\MVC\User\Identity;
 
 class ImportController extends WizardAction
 {
@@ -20,7 +21,7 @@ class ImportController extends WizardAction
     protected function collectActions(WizardActionCollection $collection)
     {
         $collection->add('account', '帐号信息', 'Form:AccountAdmin@User', array(
-                'roles' => array(UserEntity::ROLE_BUYER)
+                'roles' => array(Identity::ROLE_BUYER)
             ));
         $collection->add('profile', '个人资料', 'Form:ProfileAdmin@User');
     }

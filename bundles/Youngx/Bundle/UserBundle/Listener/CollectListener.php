@@ -11,18 +11,6 @@ class CollectListener implements Registration
 {
     public function collectMenu(MenuCollection $collection)
     {
-        $collection->add('user-login', '/user/login', '登录', 'Login@User')
-            ->setAccess('user-login');
-
-        $collection->add('user-logout', '/user/logout', '退出', 'Logout@User')
-            ->setAccess('user-logout');
-
-        $collection->add('user-register', '/user/register', '注册', 'Register@User')
-            ->setAccess('user-register');
-
-        $collection->add('user-home', '/user', '用户中心', 'Home@User', Menu::MENU)
-            ->setAccess('registered');
-
         $collection->add('user-ajax-autocomplete', '/user/ajax/autocomplete', '用户选择列表', 'Ajax::autocomplete@User')
             ->setAccess('admin');
 

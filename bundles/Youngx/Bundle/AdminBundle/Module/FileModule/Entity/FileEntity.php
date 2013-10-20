@@ -3,6 +3,7 @@
 namespace Youngx\Bundle\AdminBundle\Module\FileModule\Entity;
 
 use Youngx\Database\Entity;
+use Youngx\Database\Query;
 
 class FileEntity extends Entity
 {
@@ -14,6 +15,7 @@ class FileEntity extends Entity
     protected $filename;
     protected $mime_type;
     protected $created_at;
+    protected $sort_num = 0;
 
     public static function type()
     {
@@ -33,7 +35,7 @@ class FileEntity extends Entity
     public static function fields()
     {
         return array(
-            'id', 'entity_type', 'entity_id', 'uid', 'uri', 'filename', 'mime_type', 'created_at'
+            'id', 'entity_type', 'entity_id', 'uid', 'uri', 'filename', 'mime_type', 'created_at', 'sort_num'
         );
     }
 
@@ -155,5 +157,33 @@ class FileEntity extends Entity
     public function getMimeType()
     {
         return $this->mime_type;
+    }
+
+    /**
+     * @param int $sort_num
+     */
+    public function setSortNum($sort_num)
+    {
+        $this->sort_num = intval($sort_num);
+    }
+
+    /**
+     * @return int
+     */
+    public function getSortNum()
+    {
+        return $this->sort_num;
+    }
+
+    public static function withEntity(Query $query, Entity $entity)
+    {
+        $query->where("entity_type='{$entity->type()}' AND entity_id='{$entity->identifier()}'");
+        return $query;
+    }
+
+    public static function orderly(Query $query)
+    {
+        $query->order('sort_num ASC, id ASC');
+        return $query;
     }
 }

@@ -32,7 +32,7 @@ class MainListener implements Registration
             list($entityType, $entityId) = $args;
         }
 
-        return $this->context->repository()->query('file')->where('entity_type=:entity_type AND entity_id=:entity_id')
+        return $this->context->repository()->query('file')->where('entity_type=:entity_type AND entity_id=:entity_id')->orderly()
             ->all(array(
                     ':entity_type' => $entityType,
                     ':entity_id' => $entityId

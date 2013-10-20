@@ -2,15 +2,22 @@
 
 namespace Youngx\Bundle\ZhuiweiBundle\Module\ProductModule\Entity;
 
+use Youngx\Bundle\AdminBundle\Module\FileModule\Entity\FileEntity;
 use Youngx\Bundle\AdminBundle\Module\VocabularyModule\Entity\TermEntity;
 use Youngx\Bundle\CategoryBundle\Entity\CategoryEntity;
 use Youngx\Bundle\UserBundle\Entity\UserEntity;
 use Youngx\Bundle\ZhuiweiBundle\Module\SellerModule\Entity\FactoryEntity;
+use Youngx\Bundle\ZhuiweiBundle\Module\SellerModule\Entity\SellerEntity;
 use Youngx\Database\Entity;
 
 class ProductEntity extends Entity
 {
+    const STATUS_INVALID = 0;
+    const STATUS_ON = 1;
+    const STATUS_OFF = 2;
+
     protected $id;
+    protected $status = 0;
     protected $category_id;
     protected $uid;
     protected $unit_id;
@@ -25,6 +32,9 @@ class ProductEntity extends Entity
     protected $prices;
     protected $priceIds;
     protected $factory_id;
+    protected $created_at;
+
+    protected $pictures = null;
 
     public function __sleep()
     {
@@ -34,9 +44,23 @@ class ProductEntity extends Entity
                 $this->priceIds[$price->getType()] = $price->getId();
             }
         }
+
+        if (null === $this->pictures) {
+            $this->getPictures();
+        }
+
         $fields[] = 'priceIds';
+        $fields[] = 'pictures';
 
         return $fields;
+    }
+
+    /**
+     * @return SellerEntity | null
+     */
+    public function getSeller()
+    {
+        return $this->uid ? $this->repository()->load('seller', $this->uid) : null;
     }
 
     /**
@@ -188,8 +212,8 @@ class ProductEntity extends Entity
     public static function fields()
     {
         return array(
-            'id', 'category_id', 'uid', 'code', 'title', 'subtitle', 'picture', 'inventory', 'weight',
-            'production_time', 'shipping_time', 'unit_id'
+            'id', 'status', 'category_id', 'uid', 'code', 'title', 'subtitle', 'picture', 'inventory', 'weight',
+            'production_time', 'shipping_time', 'unit_id', 'created_at'
         );
     }
 
@@ -391,5 +415,71 @@ class ProductEntity extends Entity
     public function getUnit()
     {
         return $this->unit_id ? $this->repository()->load('term', $this->unit_id) : null;
+    }
+
+    public function getUnitLabel()
+    {
+        $unit = $this->getUnit();
+        return $unit ? $unit->getLabel() : '';
+    }
+
+    /**
+     * @param int $status
+     */
+    public function setStatus($status)
+    {
+        $this->status = intval($status);
+    }
+
+    /**
+     * @return int
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param mixed $created_at
+     */
+    public function setCreatedAt($created_at)
+    {
+        $this->created_at = intval($created_at);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCreatedAt()
+    {
+        return $this->created_at;
+    }
+
+    /**
+     * @param array $pictures
+     */
+    public function setPictures(array $pictures)
+    {
+        $this->pictures = $pictures;
+    }
+
+    /**
+     * @return array
+     */
+    public function getPictures()
+    {
+        if (null === $this->pictures) {
+            $files = $this->repository()->query('file')->withEntity($this)->orderly()->all();
+            $pictures = array();
+            if ($files) {
+                foreach ($files as $file) {
+                    if ($file instanceof FileEntity) {
+                        $pictures[$file->getId()] = $file->getUri();
+                    }
+                }
+            }
+            $this->pictures = $pictures;
+        }
+        return $this->pictures;
     }
 }

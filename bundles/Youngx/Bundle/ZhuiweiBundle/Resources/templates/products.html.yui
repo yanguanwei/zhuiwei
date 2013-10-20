@@ -22,10 +22,13 @@ $this->asset_style('products', 'css/class.css');
 <?php
 
 foreach ($this->products as $product) :
+    $url = $this->url('product-detail', array('product' => $product->getId()));
 ?>
     <li>
-        <a href="#"><img src="<?php echo $this->image_url($product->getPicture())?>" width="180" height="180" /></a>
-        <h2><a href="#"><?php echo $product->getTitle()?></a></h2>
+        <a href="<?php echo $url?>">
+            <img src="<?php echo $this->image_url($product->getPicture())?>" width="180" height="180" />
+        </a>
+        <h2><a href="<?php echo $url?>"><?php echo $product->getTitle()?></a></h2>
         <div class="index_cen_price">
             <div class="index_cen_price_right">
                 <div class="guanzhu">
@@ -57,7 +60,6 @@ endforeach;
 
 <div class="yema">
 <?php
-
 if ($this->total) {
     echo $this->widget('Paging', array(
             '#page' => $this->page,

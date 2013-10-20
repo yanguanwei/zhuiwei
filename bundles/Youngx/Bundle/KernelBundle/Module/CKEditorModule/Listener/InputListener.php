@@ -24,6 +24,11 @@ class InputListener implements Registration
         $assets->registerScriptUrl('ckeditor', 'CKEditor/ckeditor.js');
     }
 
+    public function ckeditorFullPackage(Assets $assets)
+    {
+        $assets->registerScriptUrl('ckeditor', 'CKEditor_full/ckeditor.js');
+    }
+
     public function ckeditorInput(array $attributes)
     {
         $textarea = $this->context->input('textarea', $attributes);
@@ -33,11 +38,22 @@ class InputListener implements Registration
         return $textarea;
     }
 
+    public function ckeditorFullInput(array $attributes)
+    {
+        $textarea = $this->context->input('textarea', $attributes);
+        $this->context->assets()->registerPackage('ckeditor.full');
+        $this->context->assets()->registerScriptCode("{$textarea->getId()}.ckeditor", "var ckeditor = CKEDITOR.replace('{$textarea->getId()}');");
+
+        return $textarea;
+    }
+
     public static function registerListeners()
     {
         return array(
             'kernel.input#ckeditor' => 'ckeditorInput',
-            'kernel.assets.package#ckeditor' => 'ckeditorPackage'
+            'kernel.input#ckeditor-full' => 'ckeditorFullInput',
+            'kernel.assets.package#ckeditor' => 'ckeditorPackage',
+            'kernel.assets.package#ckeditor.full' => 'ckeditorFullPackage'
         );
     }
 }

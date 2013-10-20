@@ -23,9 +23,9 @@ class AdminController
         return $context->actionResponse('Table:SellerWillingAdmin@Zhuiwei:Seller');
     }
 
-    public function vipEditAction(Context $context, UserEntity $user)
+    public function editAction(Context $context, UserEntity $user)
     {
-        return $context->actionResponse('Form:SellerVipAdmin@Zhuiwei:Seller', array(
+        return $context->actionResponse('Form:SellerAdmin@Zhuiwei:Seller', array(
                 'user' => $user
             ));
     }

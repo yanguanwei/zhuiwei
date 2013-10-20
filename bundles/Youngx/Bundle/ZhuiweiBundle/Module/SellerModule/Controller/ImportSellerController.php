@@ -8,10 +8,12 @@ use Youngx\Bundle\UserBundle\Form\ProfileAdminForm;
 use Youngx\Bundle\ZhuiweiBundle\Module\SellerModule\Entity\SellerEntity;
 use Youngx\Bundle\ZhuiweiBundle\Module\SellerModule\Form\FactoryAdminForm;
 use Youngx\Bundle\ZhuiweiBundle\Module\SellerModule\Form\FactoryPhotoAdminForm;
+use Youngx\Bundle\ZhuiweiBundle\Module\SellerModule\Form\SellerAdminForm;
 use Youngx\MVC\Action\WizardAction;
 use Youngx\MVC\Action\WizardActionCollection;
 use Youngx\MVC\Event\GetResponseEvent;
 use Youngx\MVC\RenderableResponse;
+use Youngx\MVC\User\Identity;
 
 class ImportSellerController extends WizardAction
 {
@@ -22,8 +24,9 @@ class ImportSellerController extends WizardAction
 
     protected function collectActions(WizardActionCollection $collection)
     {
-        $collection->add('account', '帐号信息', 'Form:AccountAdmin@User', array('roles' => array(UserEntity::ROLE_SELLER)));
+        $collection->add('account', '帐号信息', 'Form:AccountAdmin@User', array('roles' => array(Identity::ROLE_SELLER)));
         $collection->add('profile', '个人资料', 'Form:ProfileAdmin@User');
+        $collection->add('seller', '卖家信息', 'Form:SellerAdmin@Zhuiwei:Seller');
         $collection->add('factory', '工厂基础信息', 'Form:FactoryAdmin@Zhuiwei:Seller');
         $collection->add('photo', '证件照上传', 'Form:FactoryPhotoAdmin@Zhuiwei:Seller');
     }
@@ -52,10 +55,20 @@ class ImportSellerController extends WizardAction
         $profile->setUser($user);
     }
 
-    protected function initFactoryAction(FactoryAdminForm $factoryForm, ProfileAdminForm $profile = null)
+    protected function initSellerAction(SellerAdminForm $sellerForm, ProfileAdminForm $profile = null)
     {
         if ($profile) {
             $user = $profile->getUser();
+        } else {
+            $user = $this->context->repository()->load('user', $this->wizardContext->get('uid'));
+        }
+        $sellerForm->setUser($user);
+    }
+
+    protected function initFactoryAction(FactoryAdminForm $factoryForm, SellerAdminForm $sellerForm = null)
+    {
+        if ($sellerForm) {
+            $user = $sellerForm->getUser();
         } else {
             $user = $this->context->repository()->load('user', $this->wizardContext->get('uid'));
         }

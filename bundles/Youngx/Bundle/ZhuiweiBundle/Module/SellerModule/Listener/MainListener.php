@@ -77,6 +77,10 @@ class MainListener implements Registration
         if ($factory) {
             $factory->delete();
         }
+        $logo = $seller->getLogoFile();
+        if ($logo) {
+            $logo->delete();
+        }
     }
 
     public static function registerListeners()

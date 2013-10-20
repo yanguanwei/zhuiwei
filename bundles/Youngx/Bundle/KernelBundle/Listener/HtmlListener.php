@@ -69,7 +69,7 @@ class HtmlListener implements Registration
 
     public function message(array $attributes)
     {
-        return new Html($this->context, 'div', $attributes, 'message');
+        return new Html\MessageHtml($this->context, $attributes);
     }
 
     public function radio(array $attributes)

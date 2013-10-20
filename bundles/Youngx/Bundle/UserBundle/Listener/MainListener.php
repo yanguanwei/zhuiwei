@@ -11,6 +11,7 @@ use Youngx\MVC\Event\GetResponseEvent;
 use Youngx\MVC\Event\GetResponseForRoutingEvent;
 use Youngx\EventHandler\Registration;
 use Youngx\MVC\Exception\HttpException;
+use Youngx\MVC\User\Identity;
 
 class MainListener implements Registration
 {
@@ -32,11 +33,6 @@ class MainListener implements Registration
         return true;
     }
 
-    public function redirectUserLoginResponse(GetResponseEvent $event)
-    {
-        $event->setResponse($this->context->redirectResponse($this->context->generateUrl('user-home')));
-    }
-
     public function accessForUserLogout()
     {
         if (!$this->context->identity()->isLogged()) {
@@ -45,10 +41,6 @@ class MainListener implements Registration
         return true;
     }
 
-    public function redirectUserLogoutResponse(GetResponseEvent $event)
-    {
-        $event->setResponse($this->context->redirectResponse($this->context->generateUrl('user-login')));
-    }
 
     public function accessForUserRegister()
     {
@@ -58,15 +50,21 @@ class MainListener implements Registration
         return true;
     }
 
-    public function redirectUserRegisterResponse(GetResponseEvent $event)
+    public function accessForRegistered()
     {
-        $event->setResponse($this->context->redirectResponse($this->context->generateUrl('user-home')));
+        if ($this->context->identity()->isLogged()) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
-    public function redirectRegisteredResponse(GetResponseEvent $event)
+    public function redirectUserLoginResponse(GetResponseEvent $event)
     {
         if (!$this->context->identity()->isLogged()) {
-            $event->setResponse($this->context->redirectResponse($this->context->generateUrl('user-login')));
+            $event->setResponse($this->context->redirectResponse($this->context->generateUrl('user-login', array(
+                            'returnUrl' => $this->context->request()->getUri()
+                        ))));
         }
     }
 
@@ -139,17 +137,16 @@ code;
     public static function registerListeners()
     {
         return array(
+            'kernel.access' => 'checkAccess',
             'kernel.access#user-login' => 'accessForUserLogin',
             'kernel.access#user-logout' => 'accessForUserLogout',
             'kernel.access#user-register' => 'accessForUserRegister',
-            'kernel.access.deny#user-login' => 'redirectUserLoginResponse',
-            'kernel.access.deny#user-logout' => 'redirectUserLogoutResponse',
-            'kernel.access.deny#user-register' => 'redirectUserRegisterResponse',
-            'kernel.access.deny#registered' => 'redirectRegisteredResponse',
+            'kernel.access#registered' => 'accessForRegistered',
+            'kernel.access.deny#user-logout' => 'redirectUserLoginResponse',
+            'kernel.access.deny' => 'redirectUserLoginResponse',
             'kernel.input#select-user' => 'selectUserInput',
             'kernel.value#role-labels' => 'getRoleLabels',
             'kernel.entity.delete#user' => 'deleteUserEntity',
-            'kernel.access' => 'checkAccess'
         );
     }
 }

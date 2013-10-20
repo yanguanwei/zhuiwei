@@ -10,9 +10,6 @@ use Youngx\MVC\User\UserEntityInterface;
 
 class UserEntity extends Entity implements UserEntityInterface
 {
-    const ROLE_SELLER = 4;
-    const ROLE_BUYER = 5;
-
     protected $uid;
     protected $name;
     protected $email;

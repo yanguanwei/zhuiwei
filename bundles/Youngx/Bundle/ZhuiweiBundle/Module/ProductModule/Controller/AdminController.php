@@ -15,7 +15,7 @@ class AdminController
 
     public function addAction(Context $context)
     {
-        return $context->actionResponse('Action:ProductImport@Zhuiwei:Product');
+        return $context->actionResponse('Form:ProductAdmin@Zhuiwei:Product');
     }
 
     public function editAction(Context $context, ProductEntity $product)

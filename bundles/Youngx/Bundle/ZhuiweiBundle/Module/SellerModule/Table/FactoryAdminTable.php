@@ -65,17 +65,17 @@ class FactoryAdminTable extends Table
                 '#content' => '编辑'
             ));
 
-        $delete = $this->context->html(
-            'a', array(
-                'href' => $this->context->generateUrl('factory-admin-delete', array(
-                        'id' => $entity->getId(),
-                        'returnUrl' => $this->context->request()->getUri()
-                    )),
-                '#content' => '删除'
-            )
-        );
+//        $delete = $this->context->html(
+//            'a', array(
+//                'href' => $this->context->generateUrl('factory-admin-delete', array(
+//                        'id' => $entity->getId(),
+//                        'returnUrl' => $this->context->request()->getUri()
+//                    )),
+//                '#content' => '删除'
+//            )
+//        );
 
-        $td->setContent("{$products} | {$edit} | {$delete}");
+        $td->setContent("{$products} | {$edit}");
     }
 
     protected function render(RenderableResponse $response)

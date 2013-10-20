@@ -267,34 +267,6 @@ code;
             ->find('wrap')->addClass('progress');
     }
 
-    public function formatMessageHtml(Html $html)
-    {
-        $html->addClass('alert')
-            ->prepend($this->context->html('button', array(
-                        '#icon' => 'remove',
-                        'data-dismiss' => 'alert',
-                        'class' => 'close'
-                    )));
-    }
-
-    public function formatMessageHtmlForTypeOption(Html $html, $type)
-    {
-        if ($type == 'error') {
-            $type = 'danger';
-            $icon = 'remove';
-        } else {
-            if ($type == 'success') {
-                $icon = 'ok';
-            }
-        }
-
-        $html->addClass('alert-'.$type);
-
-        if (isset($icon)) {
-            $html->set('#icon', $icon);
-        }
-    }
-
     public function formatFormHtmlDirectionOption(Html $html, $value)
     {
         $html->addClass("form-{$value}");
@@ -338,9 +310,6 @@ code;
             "kernel.html@config:icon" => 'addIcon2Html',
             "kernel.html@config:size" => 'formatSizeConfig',
             'kernel.html.format#progress-bar' => 'formatProgressBarHtml',
-            'kernel.html.format#message' => 'formatMessageHtml',
-            'kernel.html#message@config:type' => 'formatMessageHtmlForTypeOption',
-            'kernel.html#form@config:direction' => 'formatFormHtmlDirectionOption',
         );
     }
 }
