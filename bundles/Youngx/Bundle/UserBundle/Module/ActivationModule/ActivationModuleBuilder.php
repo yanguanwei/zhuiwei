@@ -2,9 +2,8 @@
 
 namespace Youngx\Bundle\UserBundle\Module\ActivationModule;
 
-
-use Youngx\Kernel\Container\ContainerBuilder;
-use Youngx\Kernel\Container\DefinitionCollection;
+use Youngx\DI\ContainerBuilder;
+use Youngx\DI\DefinitionCollection;
 
 class ActivationModuleBuilder extends ContainerBuilder
 {

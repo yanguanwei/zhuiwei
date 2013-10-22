@@ -35,7 +35,7 @@ class PermissionAdminForm extends Form
     {
         $userRoleService = $this->context->get('user.role');
         $this->context->handler()->trigger('kernel.permission.collect', $collection = new PermissionCollection());
-        $roles = $userRoleService->getRoles();
+        $roles = $this->context->repository()->loadMultiple('roles', $userRoleService->getRoles());
         unset($roles[Identity::ROLE_ADMINISTRATOR]);
 
         $response->setFile('admin/permission.html.yui@User:Role')

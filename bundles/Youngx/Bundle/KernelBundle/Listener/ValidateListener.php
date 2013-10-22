@@ -39,7 +39,7 @@ class ValidateListener implements Registration
 
     public function email($value)
     {
-        return (Boolean) strpos($value, '#');
+        return (Boolean) strpos($value, '@');
     }
 
     public function equalTo(Form $form, $name, array $arguments)

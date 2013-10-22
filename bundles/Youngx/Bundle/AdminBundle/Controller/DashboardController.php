@@ -27,6 +27,7 @@ class DashboardController
     {
         $context->cache()->deleteAll();
         $context->flash()->add('success', '成功清除所有缓存！');
+        @unlink($context->app()->getContainerPath());
 
         return $context->redirectResponse($context->generateUrl('admin-cache'));
     }

@@ -16,6 +16,6 @@ return array(
         'mailer.Password' => 'YaN030807',
         'mailer.From' => '176013294@qq.com',
         'mailer.FromName' => 'yanguanwei',
-        'mailer.SMTPDebug' => 1
+        'mailer.SMTPDebug' => false
     )
 );

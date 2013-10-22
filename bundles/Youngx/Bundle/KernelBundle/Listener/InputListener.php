@@ -58,6 +58,33 @@ class InputListener implements Registration
         return $this->context->html('select', $attributes);
     }
 
+    public function captcha(array $attributes)
+    {
+        if (isset($attributes['#captcha_id'])) {
+            $captcha_id = $attributes['#captcha_id'];
+            unset($attributes['#captcha_id']);
+        } else {
+            $captcha_id = null;
+        }
+
+        $text = $this->text($attributes);
+        $img = $this->context->html('img', array(
+                'src' => $url = $this->context->generateUrl('captcha', array('id' => $captcha_id)),
+                'title' => '点击换一个'
+            ), true);
+        $text->after($img, 'img');
+
+        $code = <<<code
+$('#{$img->getId()}').click(function() {
+    var url = '{$url}';
+    $(this).attr('src', url + (url.indexOf('?') > 0 ? '&' : '?') + '_t=' + new Date().getTime());
+});
+code;
+        $this->context->assets()->registerScriptCode($img->getId(), $code);
+
+        return $text;
+    }
+
     public static function registerListeners()
     {
         return array(
@@ -69,6 +96,7 @@ class InputListener implements Registration
             'kernel.input#radio' => 'radio',
             'kernel.input#select' => 'select',
             'kernel.input#file' => 'file',
+            'kernel.input#captcha' => 'captcha'
         );
     }
 }

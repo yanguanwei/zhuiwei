@@ -10,8 +10,8 @@ class BuyerEntity extends Entity
     const TYPE_COMPANY = 1;
 
     protected $uid;
-    protected $company_id;
-    protected $type;
+    protected $company_id = 0;
+    protected $type = 0;
 
     /**
      * @return CompanyEntity | null

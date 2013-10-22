@@ -59,9 +59,9 @@ class MainListener implements Registration
 
     public function redirectUserRegisterResponse(GetResponseEvent $event)
     {
-        $event->setResponse($this->context->redirectResponse($this->context->generateUrl(
-                    $this->context->generateUrl($this->context->identity()->hasRole(Identity::ROLE_SELLER) ? 'seller-home' : 'buyer-home')
-                )));
+        $event->setResponse($this->context->redirectResponse(
+                $this->context->generateUrl($this->context->identity()->hasRole(Identity::ROLE_SELLER) ? 'seller-home' : 'buyer-home')
+            ));
     }
 
     public function checkSellerGroupAccess()

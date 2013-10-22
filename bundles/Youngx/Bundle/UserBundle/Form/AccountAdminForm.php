@@ -60,29 +60,12 @@ class AccountAdminForm extends Form
         $user->set($this->toArray());
         $user->save();
 
-        $this->saveRoles($user->get('uid'), $this->roles);
-
         $this->context->flash()->add('success', sprintf('保存用户 <i>%s</i> 的帐号信息成功！', $user->getName()));
         $this->user = $user;
 
         $event->setResponse($this->context->redirectResponse(
                 $this->context->request()->getUri()
             ));
-    }
-
-    protected function saveRoles($uid, array $roles)
-    {
-        $this->context->db()->exec('DELETE FROM y_user_roles WHERE uid=:uid', array(':uid' => $uid));
-        $data = array();
-        foreach ($roles as $role_id) {
-            $data[] = array(
-                'uid' => $uid,
-                'role_id' => $role_id
-            );
-        }
-        if ($data) {
-            $this->context->db()->insertMultiple('y_user_roles', $data);
-        }
     }
 
     protected function render(RenderableResponse $response)

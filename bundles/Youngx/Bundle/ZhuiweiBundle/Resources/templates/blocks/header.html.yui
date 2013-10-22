@@ -4,12 +4,27 @@
         <div class="top_right">
             <div class="top_nav">
                 <p>
-                    <a href="#">粉丝买家首页</a>
-                    <a href="#">明星卖家首页</a>
-                    <a href="<?php echo $this->url('seller-product-add');?>">上传产品</a>
-                    <a href="#">粉丝买家注册</a>
-                    <a href="#">明星卖家注册</a>
-                    <a href="<?php echo $this->url('user-home');?>">我的超值存货空间</a>
+                    <?php
+                    $navigation = array(
+                        '粉丝买家首页' => '/',
+                        '明星卖家首页' => $this->url('platform')
+                    );
+                    $identity = $this->identity();
+                    if ($identity->isSeller()) {
+                        $navigation['上传产品'] = $this->url('seller-product-add');
+                    }
+
+                    if (!$identity->isLogged()) {
+                        $navigation['粉丝买家注册'] = $this->url('user-register-buyer');
+                        $navigation['明星卖家注册'] = $this->url('user-register-seller');
+                    } else {
+                        $navigation['我的超值存货空间'] = $this->url('user-home');
+                    }
+
+                    foreach ($navigation as $label => $url) {
+                        echo sprintf('<a href="%s">%s</a>', $url, $label);
+                    }
+                    ?>
                 </p>
             </div>
 

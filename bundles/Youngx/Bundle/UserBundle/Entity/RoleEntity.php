@@ -3,6 +3,7 @@
 namespace Youngx\Bundle\UserBundle\Entity;
 
 use Youngx\Database\Entity;
+use Youngx\Database\Query;
 
 class RoleEntity extends Entity
 {
@@ -31,6 +32,14 @@ class RoleEntity extends Entity
     public function getLabel()
     {
         return $this->label;
+    }
+
+    public static function withUser(Query $query, UserEntity $user)
+    {
+        $query->leftJoinTable(array('y_user_roles', 'ur'), "ur.uid={$query->getAlias()}.uid");
+        $query->where('ur.uid=?', $user->getUid());
+
+        return $query;
     }
 
     public static function type()

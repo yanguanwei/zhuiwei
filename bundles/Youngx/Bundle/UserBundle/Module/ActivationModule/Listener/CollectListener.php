@@ -2,16 +2,14 @@
 
 namespace Youngx\Bundle\UserBundle\Module\ActivationModule\Listener;
 
-use Youngx\Kernel\Database\EntityCollection;
-use Youngx\Kernel\Database\Schema;
-use Youngx\Kernel\Handler\ListenerRegistration;
+use Youngx\EventHandler\Registration;
+use Youngx\MVC\Database\EntityCollection;
 
-class CollectListener implements ListenerRegistration
+class CollectListener implements Registration
 {
     public function collectEntity(EntityCollection $collection)
     {
-        $collection->add('Youngx\Bundle\UserBundle\Module\ActivationModule\Entity\UserActivation', 'id', 'y_user_activation')
-            ->relate('user', 'user', array('uid' => 'uid'), Schema::ONE_MANY, 'activations');
+        $collection->add('Entity:UserActivation@User:Activation');
     }
 
     public static function registerListeners()

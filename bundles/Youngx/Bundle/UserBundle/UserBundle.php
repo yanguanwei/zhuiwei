@@ -10,6 +10,7 @@ class UserBundle extends Bundle
     {
         return array(
             //'Alipay', 'RetrievePassword', 'Activation'
+            'Activation'
         );
     }
 }

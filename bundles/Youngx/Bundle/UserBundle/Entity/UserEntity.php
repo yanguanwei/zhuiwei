@@ -19,18 +19,28 @@ class UserEntity extends Entity implements UserEntityInterface
     protected $status = 0;
     protected $roles;
 
+    public function __sleep()
+    {
+        if ($this->roles === null) {
+            $this->getRoles();
+        }
+
+        return array_merge($this->fields(), array(
+                'roles'
+            ));
+    }
+
     /**
-     * @return RoleEntity[]
+     * @return array role ids
      */
     public function getRoles()
     {
-        if (!is_array($this->roles)) {
+        if ($this->roles === null) {
             $roles = array();
-            if ($this->roles) {
-                $repository = $this->repository();
-                foreach (explode(',', $this->roles) as $roleId) {
-                    $roles[$roleId] = $repository->load('role', $roleId);
-                }
+            $db = $this->repository()->getConnection();
+            $sql = "SELECT role_id FROM y_user_roles WHERE uid=:uid";
+            foreach ($db->query($sql, array(':uid' => $this->getUid()))->fetchAll() as $row) {
+                $roles[] = $row['role_id'];
             }
             $this->roles = $roles;
         }
@@ -39,7 +49,7 @@ class UserEntity extends Entity implements UserEntityInterface
 
     public function setRoles(array $roles)
     {
-        $this->roles = implode(',', $roles);
+        $this->roles = $roles;
 
         return $this;
     }
@@ -167,7 +177,7 @@ class UserEntity extends Entity implements UserEntityInterface
     public static function fields()
     {
         return array(
-            'uid', 'name', 'email', 'password', 'created_at', 'status', 'roles',
+            'uid', 'name', 'email', 'password', 'created_at', 'status',
         );
     }
 

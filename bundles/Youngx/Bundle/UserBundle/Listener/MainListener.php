@@ -134,6 +134,43 @@ code;
         $this->context->db()->exec('DELETE FROM y_user_roles WHERE uid=:uid', array(':uid' => $user->getUid()));
     }
 
+    public function insertUserEntity(UserEntity $user)
+    {
+        $this->updateUserRoles($user);
+    }
+
+    public function updateUserEntity(UserEntity $user)
+    {
+        $unChangedRoles = $user->unchangedEntity()->getRoles();
+        $shouldUpdate = false;
+        foreach ($user->getRoles() as $role_id) {
+            if (false === (array_search($role_id, $unChangedRoles))) {
+                $shouldUpdate = true;
+                break;
+            }
+        }
+
+        if ($shouldUpdate) {
+            $this->updateUserRoles($user);
+        }
+    }
+
+    protected function updateUserRoles(UserEntity $user)
+    {
+        $db = $this->context->db();
+        $db->exec('DELETE FROM y_user_roles WHERE uid=:uid', array(':uid' => $user->getUid()));
+        $data = array();
+        foreach ($user->getRoles() as $role_id) {
+            $data[] = array(
+                'uid' => $user->getUid(),
+                'role_id' => $role_id
+            );
+        }
+        if ($data) {
+            $db->insertMultiple('y_user_roles', $data);
+        }
+    }
+
     public static function registerListeners()
     {
         return array(
@@ -147,6 +184,8 @@ code;
             'kernel.input#select-user' => 'selectUserInput',
             'kernel.value#role-labels' => 'getRoleLabels',
             'kernel.entity.delete#user' => 'deleteUserEntity',
+            'kernel.entity.beforeUpdate#user' => 'updateUserEntity',
+            'kernel.entity.insert#user' => 'insertUserEntity'
         );
     }
 }

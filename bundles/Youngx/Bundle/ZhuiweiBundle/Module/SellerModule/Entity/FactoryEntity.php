@@ -10,7 +10,7 @@ use Youngx\Database\Entity;
 class FactoryEntity extends Entity
 {
     protected $id;
-    protected $uid;
+    protected $uid = 0;
     protected $status = 0;
     protected $name;
     protected $industries;
@@ -24,7 +24,7 @@ class FactoryEntity extends Entity
     protected $business_license = 0;
     protected $occ = 0;
     protected $description;
-    protected $established_at;
+    protected $established_at = 0;
     protected $area;
     protected $capacity;
 

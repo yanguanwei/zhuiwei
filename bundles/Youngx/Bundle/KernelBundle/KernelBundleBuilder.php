@@ -48,6 +48,7 @@ class KernelBundleBuilder extends ContainerBuilder
         $mailer = $collection->register('mailer', 'PHPMailer');
 
         $mailer->call('IsSMTP');
+        $mailer->call('IsHTML');
         $mailerDefaultParameters = array(
             'CharSet' => 'UTF-8',
             'SMTPDebug' => false,
@@ -86,6 +87,9 @@ class KernelBundleBuilder extends ContainerBuilder
                 'Doctrine\Common\Cache\Cache',
                 'Doctrine\Common\Cache\CacheProvider'
             ));
+
+        $collection->register('kernel.listener.collect', __NAMESPACE__ . '\Listener\CollectListener')
+            ->tag('listener');
 
         $collection->register('templating', 'Youngx\MVC\Yui\YuiEngine', true)
             ->subscribe('request')
