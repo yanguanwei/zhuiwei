@@ -18,8 +18,8 @@ $content = $this->block('content')->start();
                 <div class="Category"><a href="#">我的订单</a></div>
 
                 <dl>
-                    <dt><a href="#">正在交易中的产品</a></dt>
-                    <dt><a href="#">已完成交易的产品</a></dt>
+                    <dt><a href="<?php echo $this->url('buyer-orders-products');?>">正在交易中的产品</a></dt>
+                    <dt><a href="<?php echo $this->url('buyer-orders-products-complete');?>">已完成交易的产品</a></dt>
                 </dl>
             </div>
 
@@ -27,10 +27,10 @@ $content = $this->block('content')->start();
                 <div class="Category"><a href="#">我的卖家</a></div>
 
                 <dl>
-                    <dt><a href="#">关注我的卖家</a></dt>
-                    <dt><a href="#">交易中的卖家</a></dt>
-                    <dt><a href="#">已完成交易的卖家</a></dt>
-                    <dt><a href="#">评价过的卖家及评价</a></dt>
+                    <dt><a href="<?php echo $this->url('buyer-sellers');?>">关注我的卖家</a></dt>
+                    <dt><a href="<?php echo $this->url('buyer-orders-sellers');?>">交易中的卖家</a></dt>
+                    <dt><a href="<?php echo $this->url('buyer-sellers');?>">已完成交易的卖家</a></dt>
+                    <dt><a href="<?php echo $this->url('buyer-ratings');?>">评价过的卖家及评价</a></dt>
                 </dl>
             </div>
 
@@ -47,9 +47,9 @@ $content = $this->block('content')->start();
         <div class="right_top">
             <h2><?php echo $this->block('subtitle');?></h2>
         </div>
+        <?php echo $this->block('buyer-content');?>
     </div>
 
-    <?php echo $this->block('buyer-content');?>
     <div class="clear"></div>
 </div>
 <?php $content->end();?>

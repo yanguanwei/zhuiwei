@@ -52,6 +52,11 @@ class CollectListener implements Registration
 
         $buyer = $zhuiwei->getCollection('buyer');
         $buyer->add('buyer-home', '/user/buyer', '买家中心', 'Buyer@Zhuiwei');
+        $buyer->add('buyer-sellers', '/user/buyer/sellers', '关注我的卖家', 'Buyer::sellers@Zhuiwei');
+        $buyer->add('buyer-orders-sellers', '/user/buyer/orders/sellers', '交易中的卖家', 'Buyer::ordersSellers@Zhuiwei');
+        $buyer->add('buyer-ratings', '/user/buyer/ratings', '评价过的卖家及评价', 'Buyer::ratings@Zhuiwei');
+        $buyer->add('buyer-orders-products', '/user/buyer/orders/products', '正在交易的产品', 'Buyer::ordersProducts@Zhuiwei');
+        $buyer->add('buyer-orders-products-complete', '/user/buyer/orders/complete', '已完成的交易', 'Buyer::ordersComplete@Zhuiwei');
 
         $seller = $zhuiwei->getCollection('seller');
         $seller->add('seller-home', '/user/seller', '卖家中心', 'Seller@Zhuiwei');
@@ -61,7 +66,16 @@ class CollectListener implements Registration
             ->setRequirement('product', '\d+', 'product');
 
         $seller->add('seller-product-add', '/user/seller/product/add', '添加产品', 'Seller::addProduct@Zhuiwei');
-
+        $seller->add('seller-buyers', '/user/seller/buyers', '个人买家', 'Seller::buyers@Zhuiwei');
+        $seller->add('seller-companies', '/user/seller/companies', '机构买家', 'Seller::companies@Zhuiwei');
+        $seller->add('seller-orders-buyers', '/user/seller/orders/buyers', '交易中的买家', 'Seller::ordersBuyers@Zhuiwei');
+        $seller->add('seller-orders-buyers-complete', '/user/seller/orders/buyers-complete', '已完成交易的买家', 'Seller::ordersBuyersComplete@Zhuiwei');
+        $seller->add('seller-orders-products', '/user/seller/orders/products', '正在交易中的产品', 'Seller::ordersProducts@Zhuiwei');
+        $seller->add('seller-orders-complete', '/user/seller/orders/complete', '已完成的交易', 'Seller::ordersComplete@Zhuiwei');
+        $seller->add('seller-factory', '/user/seller/orders/factory', '工厂信息', 'Seller::factory@Zhuiwei');
+        $seller->add('seller-factory-equipment', '/user/seller/factory/equipment', '工厂设备', 'Seller::factoryEquipment@Zhuiwei');
+        $seller->add('seller-payment', '/user/seller/payment', '支付管理', 'Seller::payment@Zhuiwei');
+        $seller->add('seller-shipping', '/user/seller/shipping', '物流管理', 'Seller::shipping@Zhuiwei');
     }
 
     public static function registerListeners()

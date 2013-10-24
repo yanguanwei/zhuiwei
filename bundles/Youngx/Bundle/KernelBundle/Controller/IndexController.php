@@ -22,6 +22,6 @@ class IndexController
 
     public function renderAction(Context $context, $path, array $variables = array())
     {
-        return $context->renderResponse($path, $variables);
+        return $context->renderableResponse()->render($path, $variables);
     }
 }

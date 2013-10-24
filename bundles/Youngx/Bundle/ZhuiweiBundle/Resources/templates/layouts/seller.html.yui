@@ -21,8 +21,8 @@ $content = $this->block('content')->start();
                 <dt style="display: block;"><a href="#">促销管理</a></dt>
                 <dd><a href="#">限时大量促销[赶紧的！]</a></dd>
                 <dd><a href="#">尾单样品</a></dd>
-                <dt><a href="#">支付管理</a></dt>
-                <dt><a href="#">物流管理</a></dt>
+                <dt><a href="<?php echo $this->url('seller-payment')?>">支付管理</a></dt>
+                <dt><a href="<?php echo $this->url('seller-shipping')?>">物流管理</a></dt>
                 <dt><a href="#">已发布的产品</a></dt>
             </dl>
         </div>
@@ -31,11 +31,11 @@ $content = $this->block('content')->start();
             <div class="Category"><a href="#">我的买家</a></div>
 
             <dl>
-                <dt style="display: block;"><a href="#">个人买家</a></dt>
-                <dd><a href="#">个人买家</a></dd>
-                <dd><a href="#">机构买家</a></dd>
-                <dt><a href="#">交易中的买家</a></dt>
-                <dt><a href="#">已完成交易的买家</a></dt>
+                <dt style="display: block;"><a href="<?php echo $this->url('seller-buyers')?>">个人买家</a></dt>
+                <dd><a href="<?php echo $this->url('seller-buyers')?>">个人买家</a></dd>
+                <dd><a href="<?php echo $this->url('seller-companies')?>">机构买家</a></dd>
+                <dt><a href="<?php echo $this->url('seller-orders-buyers')?>">交易中的买家</a></dt>
+                <dt><a href="<?php echo $this->url('seller-orders-buyers-complete')?>">已完成交易的买家</a></dt>
             </dl>
         </div>
 
@@ -43,8 +43,8 @@ $content = $this->block('content')->start();
             <div class="Category"><a href="#">我的订单</a></div>
 
             <dl>
-                <dt><a href="#">正在交易中的产品</a></dt>
-                <dt><a href="#">已完成的交易</a></dt>
+                <dt><a href="<?php echo $this->url('seller-orders-products')?>">正在交易中的产品</a></dt>
+                <dt><a href="<?php echo $this->url('seller-orders-complete')?>">已完成的交易</a></dt>
             </dl>
         </div>
 
@@ -52,8 +52,8 @@ $content = $this->block('content')->start();
             <div class="Category"><a href="#">我的信息</a></div>
 
             <dl>
-                <dt><a href="#">工厂信息</a></dt>
-                <dt><a href="#">工厂设备</a></dt>
+                <dt><a href="<?php echo $this->url('seller-factory')?>">工厂信息</a></dt>
+                <dt><a href="<?php echo $this->url('seller-factory-equipment')?>">工厂设备</a></dt>
             </dl>
         </div>
     </div>

@@ -170,7 +170,7 @@ class SMTP {
     if(empty($port)) {
       $port = $this->SMTP_PORT;
     }
-
+    $errno = $errstr = $tval = null;
     // connect to the smtp server
     $this->smtp_conn = @fsockopen($host,    // the host of the server
                                  $port,    // the port to use

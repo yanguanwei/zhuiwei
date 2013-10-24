@@ -109,6 +109,7 @@ class MainListener implements Registration
             'kernel.access.deny#user-register' => 'redirectUserRegisterResponse',
             'kernel.assets@menu-group:zhuiwei' => 'registerCoreAssets',
             'kernel.renderable.config#subtitle@menu-group:seller' => 'formatSellerSubtitleConfig',
+            'kernel.renderable.config#subtitle@menu-group:buyer' => 'formatSellerSubtitleConfig',
             'kernel.block#content@menu-group:zhuiwei' => 'renderMessages',
         );
     }
